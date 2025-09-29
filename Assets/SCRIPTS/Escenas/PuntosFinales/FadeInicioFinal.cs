@@ -4,47 +4,47 @@ namespace Escenas.PuntosFinales
 {
     public class FadeInicioFinal : MonoBehaviour
     {
-        public float Duracion = 2;
-        public float Vel = 2;
+        public float duracion = 2;
+        public float vel = 2;
 
-        private Color aux;
+        private Color _aux;
 
-        private MngPts Mng;
+        private MngPts _mng;
 
-        private bool MngAvisado;
-        private float TiempInicial;
+        private bool _mngAvisado;
+        private float _tiempInicial;
 
         // Use this for initialization
         private void Start()
         {
             //renderer.material = IniFin;
-            Mng = (MngPts)FindObjectOfType(typeof(MngPts));
-            TiempInicial = Mng.TiempEspReiniciar;
+            _mng = (MngPts)FindObjectOfType(typeof(MngPts));
+            _tiempInicial = _mng.tiempEspReiniciar;
 
-            aux = GetComponent<Renderer>().material.color;
-            aux.a = 0;
-            GetComponent<Renderer>().material.color = aux;
+            _aux = GetComponent<Renderer>().material.color;
+            _aux.a = 0;
+            GetComponent<Renderer>().material.color = _aux;
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (Mng.TiempEspReiniciar > TiempInicial - Duracion) //aparicion
+            if (_mng.tiempEspReiniciar > _tiempInicial - duracion) //aparicion
             {
-                aux = GetComponent<Renderer>().material.color;
-                aux.a += Time.deltaTime / Duracion;
-                GetComponent<Renderer>().material.color = aux;
+                _aux = GetComponent<Renderer>().material.color;
+                _aux.a += Time.deltaTime / duracion;
+                GetComponent<Renderer>().material.color = _aux;
             }
-            else if (Mng.TiempEspReiniciar < Duracion) //desaparicion
+            else if (_mng.tiempEspReiniciar < duracion) //desaparicion
             {
-                aux = GetComponent<Renderer>().material.color;
-                aux.a -= Time.deltaTime / Duracion;
-                GetComponent<Renderer>().material.color = aux;
+                _aux = GetComponent<Renderer>().material.color;
+                _aux.a -= Time.deltaTime / duracion;
+                GetComponent<Renderer>().material.color = _aux;
 
-                if (!MngAvisado)
+                if (!_mngAvisado)
                 {
-                    MngAvisado = true;
-                    Mng.DesaparecerGUI();
+                    _mngAvisado = true;
+                    _mng.DesaparecerGUI();
                 }
             }
         }

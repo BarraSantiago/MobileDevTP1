@@ -10,14 +10,14 @@ namespace Auto
             int triangleCount = 0;
             int stripCount = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
+                if (combine.Mesh)
                 {
-                    vertexCount += combine.mesh.vertexCount;
+                    vertexCount += combine.Mesh.vertexCount;
 
                     if (generateStrips)
                     {
                         // SUBOPTIMAL FOR PERFORMANCE
-                        int curStripCount = combine.mesh.GetTriangles(combine.subMeshIndex).Length;
+                        int curStripCount = combine.Mesh.GetTriangles(combine.SubMeshIndex).Length;
                         if (curStripCount != 0)
                         {
                             if (stripCount != 0)
@@ -40,8 +40,8 @@ namespace Auto
             // Precomputed how many triangles we need instead
             if (!generateStrips)
                 foreach (MeshInstance combine in combines)
-                    if (combine.mesh)
-                        triangleCount += combine.mesh.GetTriangles(combine.subMeshIndex).Length;
+                    if (combine.Mesh)
+                        triangleCount += combine.Mesh.GetTriangles(combine.SubMeshIndex).Length;
 
             Vector3[] vertices = new Vector3[vertexCount];
             Vector3[] normals = new Vector3[vertexCount];
@@ -55,46 +55,46 @@ namespace Auto
 
             offset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
-                    Copy(combine.mesh.vertexCount, combine.mesh.vertices, vertices, ref offset, combine.transform);
+                if (combine.Mesh)
+                    Copy(combine.Mesh.vertexCount, combine.Mesh.vertices, vertices, ref offset, combine.Transform);
 
             offset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
+                if (combine.Mesh)
                 {
-                    Matrix4x4 invTranspose = combine.transform;
+                    Matrix4x4 invTranspose = combine.Transform;
                     invTranspose = invTranspose.inverse.transpose;
-                    CopyNormal(combine.mesh.vertexCount, combine.mesh.normals, normals, ref offset, invTranspose);
+                    CopyNormal(combine.Mesh.vertexCount, combine.Mesh.normals, normals, ref offset, invTranspose);
                 }
 
             offset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
+                if (combine.Mesh)
                 {
-                    Matrix4x4 invTranspose = combine.transform;
+                    Matrix4x4 invTranspose = combine.Transform;
                     invTranspose = invTranspose.inverse.transpose;
-                    CopyTangents(combine.mesh.vertexCount, combine.mesh.tangents, tangents, ref offset, invTranspose);
+                    CopyTangents(combine.Mesh.vertexCount, combine.Mesh.tangents, tangents, ref offset, invTranspose);
                 }
 
             offset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
-                    Copy(combine.mesh.vertexCount, combine.mesh.uv, uv, ref offset);
+                if (combine.Mesh)
+                    Copy(combine.Mesh.vertexCount, combine.Mesh.uv, uv, ref offset);
 
             offset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
-                    Copy(combine.mesh.vertexCount, combine.mesh.uv2, uv1, ref offset);
+                if (combine.Mesh)
+                    Copy(combine.Mesh.vertexCount, combine.Mesh.uv2, uv1, ref offset);
 
             int triangleOffset = 0;
             int stripOffset = 0;
             int vertexOffset = 0;
             foreach (MeshInstance combine in combines)
-                if (combine.mesh)
+                if (combine.Mesh)
                 {
                     if (generateStrips)
                     {
-                        int[] inputstrip = combine.mesh.GetTriangles(combine.subMeshIndex);
+                        int[] inputstrip = combine.Mesh.GetTriangles(combine.SubMeshIndex);
                         if (stripOffset != 0)
                         {
                             if ((stripOffset & 1) == 1)
@@ -117,13 +117,13 @@ namespace Auto
                     }
                     else
                     {
-                        int[] inputtriangles = combine.mesh.GetTriangles(combine.subMeshIndex);
+                        int[] inputtriangles = combine.Mesh.GetTriangles(combine.SubMeshIndex);
                         for (int i = 0; i < inputtriangles.Length; i++)
                             triangles[i + triangleOffset] = inputtriangles[i] + vertexOffset;
                         triangleOffset += inputtriangles.Length;
                     }
 
-                    vertexOffset += combine.mesh.vertexCount;
+                    vertexOffset += combine.Mesh.vertexCount;
                 }
 
             Mesh mesh = new Mesh();
@@ -177,9 +177,9 @@ namespace Auto
 
         public struct MeshInstance
         {
-            public Mesh mesh;
-            public int subMeshIndex;
-            public Matrix4x4 transform;
+            public Mesh Mesh;
+            public int SubMeshIndex;
+            public Matrix4x4 Transform;
         }
     }
 }

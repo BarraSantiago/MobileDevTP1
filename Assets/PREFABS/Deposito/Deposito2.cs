@@ -6,20 +6,20 @@ namespace Prefabs.Deposito
 	public class Deposito2 : MonoBehaviour 
 	{
 	
-		Player PjActual;
-		public string PlayerTag = "Player";
-		public bool Vacio = true;
-		public ControladorDeDescarga Contr1;
-		public ControladorDeDescarga Contr2;
+		Player _pjActual;
+		public string playerTag = "Player";
+		public bool vacio = true;
+		public ControladorDeDescarga contr1;
+		public ControladorDeDescarga contr2;
 	
-		Collider[] PjColl;
+		Collider[] _pjColl;
 	
 		//----------------------------------------------//
 
 		void Start () 
 		{
-			Contr1 = GameObject.Find("ContrDesc1").GetComponent<ControladorDeDescarga>();
-			Contr2 = GameObject.Find("ContrDesc2").GetComponent<ControladorDeDescarga>();
+			contr1 = GameObject.Find("ContrDesc1").GetComponent<ControladorDeDescarga>();
+			contr2 = GameObject.Find("ContrDesc2").GetComponent<ControladorDeDescarga>();
 		
 			Physics.IgnoreLayerCollision(8,9,false);
 		}
@@ -27,10 +27,10 @@ namespace Prefabs.Deposito
 		// Update is called once per frame
 		void Update () 
 		{
-			if(!Vacio)
+			if(!vacio)
 			{
-				PjActual.transform.position = transform.position;
-				PjActual.transform.forward = transform.forward;
+				_pjActual.transform.position = transform.position;
+				_pjActual.transform.forward = transform.forward;
 			}
 		}
 	
@@ -38,18 +38,18 @@ namespace Prefabs.Deposito
 	
 		public void Soltar()
 		{
-			PjActual.VaciarInv();
-			PjActual.GetComponent<Frenado>().RestaurarVel();
-			PjActual.GetComponent<Respawn>().Respawnear(transform.position,transform.forward);
+			_pjActual.VaciarInv();
+			_pjActual.GetComponent<Frenado>().RestaurarVel();
+			_pjActual.GetComponent<Respawn>().Respawnear(transform.position,transform.forward);
 		
-			PjActual.GetComponent<Rigidbody>().useGravity = true;
-			for(int i = 0; i < PjColl.Length; i++)
-				PjColl[i].enabled = true;
+			_pjActual.GetComponent<Rigidbody>().useGravity = true;
+			for(int i = 0; i < _pjColl.Length; i++)
+				_pjColl[i].enabled = true;
 		
 			Physics.IgnoreLayerCollision(8,9,false);
 		
-			PjActual = null;
-			Vacio = true;
+			_pjActual = null;
+			vacio = true;
 		
 	
 		}
@@ -59,17 +59,17 @@ namespace Prefabs.Deposito
 			if(pj.ConBolasas())
 			{
 			
-				PjActual = pj;
+				_pjActual = pj;
 			
-				PjColl = PjActual.GetComponentsInChildren<Collider>();
-				for(int i = 0; i < PjColl.Length; i++)
-					PjColl[i].enabled = false;
-				PjActual.GetComponent<Rigidbody>().useGravity = false;
+				_pjColl = _pjActual.GetComponentsInChildren<Collider>();
+				for(int i = 0; i < _pjColl.Length; i++)
+					_pjColl[i].enabled = false;
+				_pjActual.GetComponent<Rigidbody>().useGravity = false;
 			
-				PjActual.transform.position = transform.position;
-				PjActual.transform.forward = transform.forward;
+				_pjActual.transform.position = transform.position;
+				_pjActual.transform.forward = transform.forward;
 			
-				Vacio = false;
+				vacio = false;
 			
 				Physics.IgnoreLayerCollision(8,9,true);
 			
@@ -79,10 +79,10 @@ namespace Prefabs.Deposito
 	
 		public void Entro()
 		{		
-			if(PjActual.IdPlayer == 0)
-				Contr1.Activar(this);
+			if(_pjActual.idPlayer == 0)
+				contr1.Activar(this);
 			else
-				Contr2.Activar(this);
+				contr2.Activar(this);
 		}
 	}
 }

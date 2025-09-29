@@ -2,76 +2,76 @@ using UnityEngine;
 
 public class BolsaAnim : MonoBehaviour
 {
-    public float GiroVel = 1;
+    public float giroVel = 1;
 
-    public Vector3 Amlitud = Vector3.zero;
+    public Vector3 amlitud = Vector3.zero;
 
     //public float AmplitudVertical = 1;
-    public float VelMov = 1;
+    public float velMov = 1;
 
-    public bool Giro = true;
-    public bool MovVert = true;
-    private bool Iniciado;
+    public bool giro = true;
+    public bool movVert = true;
+    private bool _iniciado;
 
-    private Vector3 PosIni;
+    private Vector3 _posIni;
 
     //float Aumento = 0;
-    private bool Subiendo = true;
+    private bool _subiendo = true;
 
     //para que inicien a destiempo
-    private float TiempInicio;
-    private Vector3 vAuxGir = Vector3.zero;
+    private float _tiempInicio;
+    private Vector3 _vAuxGir = Vector3.zero;
 
-    private Vector3 vAuxPos = Vector3.zero;
+    private Vector3 _vAuxPos = Vector3.zero;
 
     // Use this for initialization
     private void Start()
     {
-        PosIni = transform.position;
+        _posIni = transform.position;
 
-        TiempInicio = Random.Range(0, 2);
+        _tiempInicio = Random.Range(0, 2);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Iniciado)
+        if (_iniciado)
         {
-            if (Giro)
+            if (giro)
             {
-                vAuxGir = Vector3.zero;
-                vAuxGir.y = T.GetDT() * GiroVel;
-                transform.localEulerAngles += vAuxGir;
+                _vAuxGir = Vector3.zero;
+                _vAuxGir.y = T.GetDT() * giroVel;
+                transform.localEulerAngles += _vAuxGir;
             }
 
-            if (MovVert)
+            if (movVert)
             {
-                if (Subiendo)
+                if (_subiendo)
                 {
-                    transform.localPosition += Amlitud.normalized * Time.deltaTime * VelMov;
+                    transform.localPosition += amlitud.normalized * Time.deltaTime * velMov;
 
-                    if ((transform.position - PosIni).magnitude > Amlitud.magnitude / 2)
+                    if ((transform.position - _posIni).magnitude > amlitud.magnitude / 2)
                     {
-                        Subiendo = false;
-                        transform.localPosition -= Amlitud.normalized * Time.deltaTime * VelMov;
+                        _subiendo = false;
+                        transform.localPosition -= amlitud.normalized * Time.deltaTime * velMov;
                     }
                 }
                 else
                 {
-                    transform.localPosition -= Amlitud.normalized * Time.deltaTime * VelMov;
-                    if ((transform.position - PosIni).magnitude > Amlitud.magnitude / 2)
+                    transform.localPosition -= amlitud.normalized * Time.deltaTime * velMov;
+                    if ((transform.position - _posIni).magnitude > amlitud.magnitude / 2)
                     {
-                        Subiendo = true;
-                        transform.localPosition += Amlitud.normalized * Time.deltaTime * VelMov;
+                        _subiendo = true;
+                        transform.localPosition += amlitud.normalized * Time.deltaTime * velMov;
                     }
                 }
             }
         }
         else
         {
-            TiempInicio -= Time.deltaTime;
-            if (TiempInicio <= 0)
-                Iniciado = true;
+            _tiempInicio -= Time.deltaTime;
+            if (_tiempInicio <= 0)
+                _iniciado = true;
         }
     }
 }

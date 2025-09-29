@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class ReductorVelColl : MonoBehaviour
 {
-    public float ReduccionVel;
-    public string PlayerTag = "Player";
-    private bool Usado;
+    public float reduccionVel;
+    public string playerTag = "Player";
+    private bool _usado;
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.tag == PlayerTag)
-            if (!Usado)
+        if (other.transform.tag == playerTag)
+            if (!_usado)
                 Chocado();
         //other.transform.GetComponent<AcelerAuto>().Chocar(this);
     }
 
     public virtual void Chocado()
     {
-        Usado = true;
+        _usado = true;
     }
 }

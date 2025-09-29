@@ -14,32 +14,32 @@ public class Player : MonoBehaviour
         EnTutorial
     }
 
-    public int Dinero;
-    public int IdPlayer;
+    public int dinero;
+    public int idPlayer;
 
-    public Bolsa[] Bolasas;
-    public string TagBolsas = "";
-    public Estados EstAct = Estados.EnConduccion;
+    public Bolsa[] bolasas;
+    public string tagBolsas = "";
+    public Estados estAct = Estados.EnConduccion;
 
-    public bool EnConduccion = true;
-    public bool EnDescarga;
+    public bool enConduccion = true;
+    public bool enDescarga;
 
-    public ControladorDeDescarga ContrDesc;
-    public ContrCalibracion ContrCalib;
-    public ContrTutorial ContrTuto;
-    private int CantBolsAct;
+    public ControladorDeDescarga contrDesc;
+    public ContrCalibracion contrCalib;
+    public ContrTutorial contrTuto;
+    private int _cantBolsAct;
 
-    private Visualizacion MiVisualizacion;
+    private Visualizacion _miVisualizacion;
 
     //------------------------------------------------------------------//
 
     // Use this for initialization
     private void Start()
     {
-        for (int i = 0; i < Bolasas.Length; i++)
-            Bolasas[i] = null;
+        for (int i = 0; i < bolasas.Length; i++)
+            bolasas[i] = null;
 
-        MiVisualizacion = GetComponent<Visualizacion>();
+        _miVisualizacion = GetComponent<Visualizacion>();
     }
 
     // Update is called once per frame
@@ -51,11 +51,11 @@ public class Player : MonoBehaviour
 
     public bool AgregarBolsa(Bolsa b)
     {
-        if (CantBolsAct + 1 <= Bolasas.Length)
+        if (_cantBolsAct + 1 <= bolasas.Length)
         {
-            Bolasas[CantBolsAct] = b;
-            CantBolsAct++;
-            Dinero += (int)b.Monto;
+            bolasas[_cantBolsAct] = b;
+            _cantBolsAct++;
+            dinero += (int)b.monto;
             b.Desaparecer();
             return true;
         }
@@ -65,16 +65,16 @@ public class Player : MonoBehaviour
 
     public void VaciarInv()
     {
-        for (int i = 0; i < Bolasas.Length; i++)
-            Bolasas[i] = null;
+        for (int i = 0; i < bolasas.Length; i++)
+            bolasas[i] = null;
 
-        CantBolsAct = 0;
+        _cantBolsAct = 0;
     }
 
     public bool ConBolasas()
     {
-        for (int i = 0; i < Bolasas.Length; i++)
-            if (Bolasas[i] != null)
+        for (int i = 0; i < bolasas.Length; i++)
+            if (bolasas[i] != null)
                 return true;
 
         return false;
@@ -82,45 +82,45 @@ public class Player : MonoBehaviour
 
     public void SetContrDesc(ControladorDeDescarga contr)
     {
-        ContrDesc = contr;
+        contrDesc = contr;
     }
 
     public ControladorDeDescarga GetContr()
     {
-        return ContrDesc;
+        return contrDesc;
     }
 
     public void CambiarACalibracion()
     {
-        MiVisualizacion.CambiarACalibracion();
-        EstAct = Estados.EnCalibracion;
+        _miVisualizacion.CambiarACalibracion();
+        estAct = Estados.EnCalibracion;
     }
 
     public void CambiarATutorial()
     {
-        MiVisualizacion.CambiarATutorial();
-        EstAct = Estados.EnTutorial;
-        ContrTuto.Iniciar();
+        _miVisualizacion.CambiarATutorial();
+        estAct = Estados.EnTutorial;
+        contrTuto.Iniciar();
     }
 
     public void CambiarAConduccion()
     {
-        MiVisualizacion.CambiarAConduccion();
-        EstAct = Estados.EnConduccion;
+        _miVisualizacion.CambiarAConduccion();
+        estAct = Estados.EnConduccion;
     }
 
     public void CambiarADescarga()
     {
-        MiVisualizacion.CambiarADescarga();
-        EstAct = Estados.EnDescarga;
+        _miVisualizacion.CambiarADescarga();
+        estAct = Estados.EnDescarga;
     }
 
     public void SacarBolasa()
     {
-        for (int i = 0; i < Bolasas.Length; i++)
-            if (Bolasas[i] != null)
+        for (int i = 0; i < bolasas.Length; i++)
+            if (bolasas[i] != null)
             {
-                Bolasas[i] = null;
+                bolasas[i] = null;
                 return;
             }
     }

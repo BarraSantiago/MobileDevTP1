@@ -5,23 +5,23 @@ namespace Escenas.Juego.Tutorial
 {
     public class ContrTutorial : MonoBehaviour
     {
-        public Player Pj;
-        public float TiempTuto = 15;
-        public float Tempo;
+        public Player pj;
+        public float tiempTuto = 15;
+        public float tempo;
 
-        public bool Finalizado;
+        public bool finalizado;
 
-        private GameManager GM;
-        private bool Iniciado;
+        private GameManager _gm;
+        private bool _iniciado;
 
         //------------------------------------------------------------------//
 
         // Use this for initialization
         private void Start()
         {
-            GM = GameObject.Find("GameMgr").GetComponent<GameManager>();
+            _gm = GameObject.Find("GameMgr").GetComponent<GameManager>();
 
-            Pj.ContrTuto = this;
+            pj.contrTuto = this;
         }
 
         // Update is called once per frame
@@ -44,7 +44,7 @@ namespace Escenas.Juego.Tutorial
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Player>() == Pj)
+            if (other.GetComponent<Player>() == pj)
                 Finalizar();
         }
 
@@ -52,17 +52,17 @@ namespace Escenas.Juego.Tutorial
 
         public void Iniciar()
         {
-            Pj.GetComponent<Frenado>().RestaurarVel();
-            Iniciado = true;
+            pj.GetComponent<Frenado>().RestaurarVel();
+            _iniciado = true;
         }
 
         public void Finalizar()
         {
-            Finalizado = true;
-            GM.FinTutorial(Pj.IdPlayer);
-            Pj.GetComponent<Frenado>().Frenar();
-            Pj.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-            Pj.VaciarInv();
+            finalizado = true;
+            _gm.FinTutorial(pj.idPlayer);
+            pj.GetComponent<Frenado>().Frenar();
+            pj.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            pj.VaciarInv();
         }
     }
 }

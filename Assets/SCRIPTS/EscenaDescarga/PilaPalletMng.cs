@@ -5,13 +5,13 @@ namespace EscenaDescarga
 {
     public class PilaPalletMng : MonoBehaviour
     {
-        public List<GameObject> BolasasEnCamion = new();
-        public int CantAct;
+        public List<GameObject> bolasasEnCamion = new();
+        public int cantAct;
 
         // Use this for initialization
         private void Start()
         {
-            for (int i = 0; i < BolasasEnCamion.Count; i++) BolasasEnCamion[i].GetComponent<Renderer>().enabled = false;
+            for (int i = 0; i < bolasasEnCamion.Count; i++) bolasasEnCamion[i].GetComponent<Renderer>().enabled = false;
         }
 
         // Update is called once per frame
@@ -21,14 +21,14 @@ namespace EscenaDescarga
 
         public void Sacar()
         {
-            BolasasEnCamion[CantAct - 1].GetComponent<Renderer>().enabled = false;
-            CantAct--;
+            bolasasEnCamion[cantAct - 1].GetComponent<Renderer>().enabled = false;
+            cantAct--;
         }
 
         public void Agregar()
         {
-            CantAct++;
-            BolasasEnCamion[CantAct - 1].GetComponent<Renderer>().enabled = true;
+            cantAct++;
+            bolasasEnCamion[cantAct - 1].GetComponent<Renderer>().enabled = true;
         }
     }
 }

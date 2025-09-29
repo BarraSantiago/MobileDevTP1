@@ -11,26 +11,26 @@ namespace Auto
         public float distance = 4f;
         public LayerMask ignoreLayers = -1;
 
-        public float LejaniaZ = 1;
+        public float lejaniaZ = 1;
 
-        private Vector3 currentVelocity = Vector3.zero;
+        private Vector3 _currentVelocity = Vector3.zero;
 
-        private RaycastHit hit;
+        private RaycastHit _hit;
 
-        private Vector3 prevVelocity = Vector3.zero;
-        private LayerMask raycastLayers = -1;
+        private Vector3 _prevVelocity = Vector3.zero;
+        private LayerMask _raycastLayers = -1;
 
         private void Start()
         {
-            raycastLayers = ~ignoreLayers;
+            _raycastLayers = ~ignoreLayers;
         }
 
         private void FixedUpdate()
         {
-            currentVelocity = Vector3.Lerp(prevVelocity, target.root.GetComponent<Rigidbody>().linearVelocity,
+            _currentVelocity = Vector3.Lerp(_prevVelocity, target.root.GetComponent<Rigidbody>().linearVelocity,
                 velocityDamping * Time.deltaTime);
-            currentVelocity.y = 0;
-            prevVelocity = currentVelocity;
+            _currentVelocity.y = 0;
+            _prevVelocity = _currentVelocity;
         }
 
         private void LateUpdate()
@@ -39,17 +39,17 @@ namespace Auto
             GetComponent<Camera>().fieldOfView = Mathf.Lerp(55, 72, speedFactor);
             float currentDistance = Mathf.Lerp(7.5f, 6.5f, speedFactor);
 
-            currentVelocity = currentVelocity.normalized;
+            _currentVelocity = _currentVelocity.normalized;
 
             Vector3 newTargetPosition = target.position + Vector3.up * height;
-            Vector3 newPosition = newTargetPosition - currentVelocity * currentDistance;
+            Vector3 newPosition = newTargetPosition - _currentVelocity * currentDistance;
             newPosition.y = newTargetPosition.y;
 
             Vector3 targetDirection = newPosition - newTargetPosition;
-            if (Physics.Raycast(newTargetPosition, targetDirection, out hit, currentDistance, raycastLayers))
-                newPosition = hit.point;
+            if (Physics.Raycast(newTargetPosition, targetDirection, out _hit, currentDistance, _raycastLayers))
+                newPosition = _hit.point;
 
-            newPosition += transform.forward * LejaniaZ; //diferencia en z agregada por mi
+            newPosition += transform.forward * lejaniaZ; //diferencia en z agregada por mi
 
             transform.position = newPosition;
             transform.LookAt(newTargetPosition);

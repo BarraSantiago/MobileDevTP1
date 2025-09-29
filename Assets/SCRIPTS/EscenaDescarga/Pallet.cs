@@ -11,17 +11,17 @@ namespace EscenaDescarga
             Valor3 = 500000
         }
 
-        public Valores Valor;
-        public float Tiempo;
-        public GameObject CintaReceptora;
-        public GameObject Portador;
-        public float TiempEnCinta = 1.5f;
-        public float TempoEnCinta;
+        public Valores valor;
+        public float tiempo;
+        public GameObject cintaReceptora;
+        public GameObject portador;
+        public float tiempEnCinta = 1.5f;
+        public float tempoEnCinta;
 
 
-        public float TiempSmoot = 0.3f;
-        public bool EnSmoot;
-        private float TempoSmoot;
+        public float tiempSmoot = 0.3f;
+        public bool enSmoot;
+        private float _tempoSmoot;
 
         //----------------------------------------------//
 
@@ -32,29 +32,29 @@ namespace EscenaDescarga
 
         private void LateUpdate()
         {
-            if (!Portador) return;
-            if (EnSmoot)
+            if (!portador) return;
+            if (enSmoot)
             {
-                TempoSmoot += T.GetDT();
-                if (TempoSmoot >= TiempSmoot)
+                _tempoSmoot += T.GetDT();
+                if (_tempoSmoot >= tiempSmoot)
                 {
-                    EnSmoot = false;
-                    TempoSmoot = 0;
+                    enSmoot = false;
+                    _tempoSmoot = 0;
                 }
                 else
                 {
-                    if (Portador.GetComponent<ManoRecept>())
-                        transform.position = Portador.transform.position - Vector3.up * 1.2f;
+                    if (portador.GetComponent<ManoRecept>())
+                        transform.position = portador.transform.position - Vector3.up * 1.2f;
                     else
-                        transform.position = Vector3.Lerp(transform.position, Portador.transform.position, T.GetDT() * 10);
+                        transform.position = Vector3.Lerp(transform.position, portador.transform.position, T.GetDT() * 10);
                 }
             }
             else
             {
-                if (Portador.GetComponent<ManoRecept>())
-                    transform.position = Portador.transform.position - Vector3.up * 1.2f;
+                if (portador.GetComponent<ManoRecept>())
+                    transform.position = portador.transform.position - Vector3.up * 1.2f;
                 else
-                    transform.position = Portador.transform.position;
+                    transform.position = portador.transform.position;
             }
         }
 
@@ -62,7 +62,7 @@ namespace EscenaDescarga
 
         public float GetBonus()
         {
-            if (Tiempo > 0)
+            if (tiempo > 0)
             {
                 //calculo del bonus
             }
@@ -72,8 +72,8 @@ namespace EscenaDescarga
 
         public void Pasaje()
         {
-            EnSmoot = true;
-            TempoSmoot = 0;
+            enSmoot = true;
+            _tempoSmoot = 0;
         }
     }
 }

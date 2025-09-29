@@ -2,29 +2,29 @@ using UnityEngine;
 
 public class Inventario : MonoBehaviour
 {
-    public Vector2 FondoPos = Vector2.zero;
-    public Vector2 FondoEsc = Vector2.zero;
+    public Vector2 fondoPos = Vector2.zero;
+    public Vector2 fondoEsc = Vector2.zero;
 
-    public Vector2 SlotsEsc = Vector2.zero;
-    public Vector2 SlotPrimPos = Vector2.zero;
-    public Vector2 Separacion = Vector2.zero;
+    public Vector2 slotsEsc = Vector2.zero;
+    public Vector2 slotPrimPos = Vector2.zero;
+    public Vector2 separacion = Vector2.zero;
 
-    public int Fil;
-    public int Col;
+    public int fil;
+    public int col;
 
-    public Texture2D TexturaVacia; //lo que aparece si no hay ninguna bolsa
-    public Texture2D TextFondo;
-    public GUISkin GS;
-    private Player Pj;
+    public Texture2D texturaVacia; //lo que aparece si no hay ninguna bolsa
+    public Texture2D textFondo;
+    public GUISkin gs;
+    private Player _pj;
 
-    private Rect R;
+    private Rect _r;
 
     //------------------------------------------------------------------//
 
     // Use this for initialization
     private void Start()
     {
-        Pj = GetComponent<Player>();
+        _pj = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -34,42 +34,42 @@ public class Inventario : MonoBehaviour
 
     private void OnGUI()
     {
-        switch (Pj.EstAct)
+        switch (_pj.estAct)
         {
             case Player.Estados.EnConduccion:
-                GUI.skin = GS;
+                GUI.skin = gs;
 
                 //fondo
-                GS.box.normal.background = TextFondo;
-                R.width = FondoEsc.x * Screen.width / 100;
-                R.height = FondoEsc.y * Screen.height / 100;
-                R.x = FondoPos.x * Screen.width / 100;
-                R.y = FondoPos.y * Screen.height / 100;
-                GUI.Box(R, "");
+                gs.box.normal.background = textFondo;
+                _r.width = fondoEsc.x * Screen.width / 100;
+                _r.height = fondoEsc.y * Screen.height / 100;
+                _r.x = fondoPos.x * Screen.width / 100;
+                _r.y = fondoPos.y * Screen.height / 100;
+                GUI.Box(_r, "");
 
                 //bolsas
-                R.width = SlotsEsc.x * Screen.width / 100;
-                R.height = SlotsEsc.y * Screen.height / 100;
+                _r.width = slotsEsc.x * Screen.width / 100;
+                _r.height = slotsEsc.y * Screen.height / 100;
                 int contador = 0;
-                for (int j = 0; j < Fil; j++)
-                for (int i = 0; i < Col; i++)
+                for (int j = 0; j < fil; j++)
+                for (int i = 0; i < col; i++)
                 {
-                    R.x = SlotPrimPos.x * Screen.width / 100 + Separacion.x * i * Screen.width / 100;
-                    R.y = SlotPrimPos.y * Screen.height / 100 + Separacion.y * j * Screen.height / 100;
+                    _r.x = slotPrimPos.x * Screen.width / 100 + separacion.x * i * Screen.width / 100;
+                    _r.y = slotPrimPos.y * Screen.height / 100 + separacion.y * j * Screen.height / 100;
 
-                    if (contador < Pj.Bolasas.Length) //&& Pj.Bolasas[contador] != null)
+                    if (contador < _pj.bolasas.Length) //&& Pj.Bolasas[contador] != null)
                     {
-                        if (Pj.Bolasas[contador] != null)
-                            GS.box.normal.background = Pj.Bolasas[contador].ImagenInventario;
+                        if (_pj.bolasas[contador] != null)
+                            gs.box.normal.background = _pj.bolasas[contador].imagenInventario;
                         else
-                            GS.box.normal.background = TexturaVacia;
+                            gs.box.normal.background = texturaVacia;
                     }
                     else
                     {
-                        GS.box.normal.background = TexturaVacia;
+                        gs.box.normal.background = texturaVacia;
                     }
 
-                    GUI.Box(R, "");
+                    GUI.Box(_r, "");
 
                     contador++;
                 }

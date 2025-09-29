@@ -7,8 +7,8 @@ public class CarController : MonoBehaviour
     public List<WheelCollider> steeringWheels = new();
     public float throttleCoefficient = 20000f;
     public float maxTurn = 20f;
-    private float acel = 1f;
-    private float giro;
+    private float _acel = 1f;
+    private float _giro;
 
     // Use this for initialization
     private void Start()
@@ -19,18 +19,18 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        foreach (WheelCollider wheel in throttleWheels) wheel.motorTorque = throttleCoefficient * T.GetFDT() * acel;
-        foreach (WheelCollider wheel in steeringWheels) wheel.steerAngle = maxTurn * giro;
-        giro = 0f;
+        foreach (WheelCollider wheel in throttleWheels) wheel.motorTorque = throttleCoefficient * T.GetFdt() * _acel;
+        foreach (WheelCollider wheel in steeringWheels) wheel.steerAngle = maxTurn * _giro;
+        _giro = 0f;
     }
 
     public void SetGiro(float giro)
     {
-        this.giro = giro;
+        this._giro = giro;
     }
 
     public void SetAcel(float val)
     {
-        acel = val;
+        _acel = val;
     }
 }

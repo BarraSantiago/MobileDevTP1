@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class AcelerAuto : MonoBehaviour
 {
-    public float AcelPorSeg;
-    public float VelMax;
-    public float TiempRecColl;
+    public float acelPorSeg;
+    public float velMax;
+    public float tiempRecColl;
 
 
-    private bool Avil = true;
-    private ReductorVelColl Obstaculo;
-    private float Tempo;
-    private float Velocidad;
+    private bool _avil = true;
+    private ReductorVelColl _obstaculo;
+    private float _tempo;
+    private float _velocidad;
 
     // Use this for initialization
     private void Start()
@@ -29,13 +29,13 @@ public class AcelerAuto : MonoBehaviour
 
         //Debug.Log("Velocidad: "+rigidbody.velocity.magnitude);
 
-        if (Avil)
+        if (_avil)
         {
-            Tempo += Time.deltaTime;
-            if (Tempo > TiempRecColl)
+            _tempo += Time.deltaTime;
+            if (_tempo > tiempRecColl)
             {
-                Tempo = 0;
-                Avil = false;
+                _tempo = 0;
+                _avil = false;
             }
         }
     }
@@ -58,22 +58,22 @@ public class AcelerAuto : MonoBehaviour
         rigidbody.MovePosition(this.transform.position + this.transform.forward * Velocidad);
         */
 
-        if (Velocidad < VelMax) Velocidad += AcelPorSeg * Time.fixedDeltaTime;
+        if (_velocidad < velMax) _velocidad += acelPorSeg * Time.fixedDeltaTime;
 
-        GetComponent<Rigidbody>().AddForce(transform.forward * Velocidad);
+        GetComponent<Rigidbody>().AddForce(transform.forward * _velocidad);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!Avil)
+        if (!_avil)
         {
-            Obstaculo = collision.transform.GetComponent<ReductorVelColl>();
-            if (Obstaculo != null)
+            _obstaculo = collision.transform.GetComponent<ReductorVelColl>();
+            if (_obstaculo != null)
                 //Velocidad -= Obstaculo.ReduccionVel;
                 //if(Velocidad < 0)
                 //Velocidad = 0;
                 GetComponent<Rigidbody>().linearVelocity /= 2;
-            Obstaculo = null;
+            _obstaculo = null;
         }
     }
 

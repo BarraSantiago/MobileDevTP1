@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Obstaculo : MonoBehaviour
 {
-    public float ReduccionVel;
-    public float TiempEmpDesapa = 1;
-    public float TiempDesapareciendo = 1;
-    public string PlayerTag = "Player";
+    public float reduccionVel;
+    public float tiempEmpDesapa = 1;
+    public float tiempDesapareciendo = 1;
+    public string playerTag = "Player";
 
-    private bool Chocado;
-    private bool Desapareciendo;
-    private float Tempo1;
-    private float Tempo2;
+    private bool _chocado;
+    private bool _desapareciendo;
+    private float _tempo1;
+    private float _tempo2;
 
     // Use this for initialization
     private void Start()
@@ -20,30 +20,30 @@ public class Obstaculo : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Chocado)
+        if (_chocado)
         {
-            Tempo1 += T.GetDT();
-            if (Tempo1 > TiempEmpDesapa)
+            _tempo1 += T.GetDT();
+            if (_tempo1 > tiempEmpDesapa)
             {
-                Chocado = false;
-                Desapareciendo = true;
+                _chocado = false;
+                _desapareciendo = true;
                 GetComponent<Rigidbody>().useGravity = false;
                 GetComponent<Collider>().enabled = false;
             }
         }
 
-        if (Desapareciendo)
+        if (_desapareciendo)
         {
             //animacion de desaparecer
 
-            Tempo2 += T.GetDT();
-            if (Tempo2 > TiempDesapareciendo) gameObject.SetActiveRecursively(false);
+            _tempo2 += T.GetDT();
+            if (_tempo2 > tiempDesapareciendo) gameObject.SetActiveRecursively(false);
         }
     }
 
     private void OnCollisionEnter(Collision coll)
     {
-        if (coll.transform.tag == PlayerTag) Chocado = true;
+        if (coll.transform.tag == playerTag) _chocado = true;
     }
 
     //------------------------------------------------//

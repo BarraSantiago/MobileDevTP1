@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CheakPoint : MonoBehaviour
 {
-    public string PlayerTag = "Player";
-    public float TiempPermanencia = 0.7f; //tiempo que no deja respaunear a un pj desp que el otro lo hizo.
-    private bool HabilitadoResp = true;
-    private float Tempo;
+    public string playerTag = "Player";
+    public float tiempPermanencia = 0.7f; //tiempo que no deja respaunear a un pj desp que el otro lo hizo.
+    private bool _habilitadoResp = true;
+    private float _tempo;
 
     // Use this for initialization
     private void Start()
@@ -16,38 +16,38 @@ public class CheakPoint : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!HabilitadoResp)
+        if (!_habilitadoResp)
         {
-            Tempo += T.GetDT();
-            if (Tempo >= TiempPermanencia)
+            _tempo += T.GetDT();
+            if (_tempo >= tiempPermanencia)
             {
-                Tempo = 0;
-                HabilitadoResp = true;
+                _tempo = 0;
+                _habilitadoResp = true;
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == PlayerTag) other.GetComponent<Respawn>().AgregarCP(this);
+        if (other.tag == playerTag) other.GetComponent<Respawn>().AgregarCp(this);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == PlayerTag) HabilitadoResp = true;
+        if (other.tag == playerTag) _habilitadoResp = true;
     }
 
     //---------------------------------------------------//
 
     public bool Habilitado()
     {
-        if (HabilitadoResp)
+        if (_habilitadoResp)
         {
-            HabilitadoResp = false;
-            Tempo = 0;
+            _habilitadoResp = false;
+            _tempo = 0;
             return true;
         }
 
-        return HabilitadoResp;
+        return _habilitadoResp;
     }
 }

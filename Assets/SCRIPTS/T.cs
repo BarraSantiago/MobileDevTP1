@@ -2,59 +2,59 @@ using UnityEngine;
 
 public static class T
 {
-    private static float FDT;
-    private static float DT;
+    private static float _fdt;
+    private static float _dt;
 
     //----------
     //fixed delta time
-    public static float FactorFDT = 1;
-    private static bool FifadoFDT;
+    public static float FactorFdt = 1;
+    private static bool _fifadoFdt;
 
     //----------
     //delta time
     public static float FactorDT = 1;
-    private static bool FifadoDT;
+    private static bool _fifadoDT;
 
 
     public static float GetDT()
     {
-        if (!FifadoDT)
-            DT = Time.deltaTime * FactorDT;
+        if (!_fifadoDT)
+            _dt = Time.deltaTime * FactorDT;
 
-        return DT;
+        return _dt;
     }
 
-    public static float GetFDT()
+    public static float GetFdt()
     {
-        if (!FifadoFDT)
-            FDT = Time.fixedDeltaTime * FactorFDT;
+        if (!_fifadoFdt)
+            _fdt = Time.fixedDeltaTime * FactorFdt;
 
-        return FDT;
+        return _fdt;
     }
 
-    public static void FijarFDT(float valor)
+    public static void FijarFdt(float valor)
     {
-        FifadoFDT = true;
-        FDT = valor;
+        _fifadoFdt = true;
+        _fdt = valor;
     }
 
-    public static void RestaurarFDT()
+    public static void RestaurarFdt()
     {
-        FifadoFDT = false;
-        FDT = Time.fixedDeltaTime;
-        FactorFDT = 1;
+        _fifadoFdt = false;
+        _fdt = Time.fixedDeltaTime;
+        FactorFdt = 1;
     }
 
     public static void FijarDT(float valor)
     {
-        FifadoDT = true;
-        DT = valor;
+        _fifadoDT = true;
+        _dt = valor;
     }
 
     public static void RestaurarDT()
     {
-        FifadoDT = false;
-        DT = Time.deltaTime;
+        _fifadoDT = false;
+        _dt = Time.deltaTime;
         FactorDT = 1;
     }
 }

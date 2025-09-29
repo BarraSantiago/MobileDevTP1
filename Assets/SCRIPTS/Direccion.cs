@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class Direccion : MonoBehaviour
 {
-    public Transform ManoDer;
-    public Transform ManoIzq;
+    public Transform manoDer;
+    public Transform manoIzq;
 
-    public float DifMin;
-    public float DifMax;
-    public float Sensibilidad = 1;
+    public float difMin;
+    public float difMax;
+    public float sensibilidad = 1;
 
-    public Transform Camion; //lo que va a conducir
-    public Transform Volante;
-    private Vector3 Aux;
-    private float Diferencia;
+    public Transform camion; //lo que va a conducir
+    public Transform volante;
+    private Vector3 _aux;
+    private float _diferencia;
 
-    private Sentido DirAct;
+    private Sentido _dirAct;
 
     //---------------------------------------------------------//
 
@@ -26,33 +26,33 @@ public class Direccion : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (ManoIzq.position.y > ManoDer.position.y)
+        if (manoIzq.position.y > manoDer.position.y)
         {
-            DirAct = Sentido.Der;
-            Diferencia = ManoIzq.position.y - ManoDer.position.y;
+            _dirAct = Sentido.Der;
+            _diferencia = manoIzq.position.y - manoDer.position.y;
         }
         else
         {
-            DirAct = Sentido.Izq;
-            Diferencia = ManoDer.position.y - ManoIzq.position.y;
+            _dirAct = Sentido.Izq;
+            _diferencia = manoDer.position.y - manoIzq.position.y;
         }
 
-        if (Diferencia > DifMin && Diferencia < DifMax)
-            switch (DirAct)
+        if (_diferencia > difMin && _diferencia < difMax)
+            switch (_dirAct)
             {
                 case Sentido.Der:
-                    Camion.rotation *= Quaternion.AngleAxis(Diferencia * Sensibilidad * Time.deltaTime, Camion.up);
-                    Volante.localRotation *=
-                        Quaternion.AngleAxis(Diferencia * Sensibilidad * Time.deltaTime, Vector3.up);
+                    camion.rotation *= Quaternion.AngleAxis(_diferencia * sensibilidad * Time.deltaTime, camion.up);
+                    volante.localRotation *=
+                        Quaternion.AngleAxis(_diferencia * sensibilidad * Time.deltaTime, Vector3.up);
                     //Aux = Volante.localEulerAngles;
                     //Aux.x += Diferencia * Sensibilidad;
                     //Volante.localEulerAngles = Aux;
                     break;
 
                 case Sentido.Izq:
-                    Camion.rotation *= Quaternion.AngleAxis(-1 * Diferencia * Sensibilidad * Time.deltaTime, Camion.up);
-                    Volante.localRotation *=
-                        Quaternion.AngleAxis(-1 * Diferencia * Sensibilidad * Time.deltaTime, Vector3.up);
+                    camion.rotation *= Quaternion.AngleAxis(-1 * _diferencia * sensibilidad * Time.deltaTime, camion.up);
+                    volante.localRotation *=
+                        Quaternion.AngleAxis(-1 * _diferencia * sensibilidad * Time.deltaTime, Vector3.up);
                     //Aux = Volante.localEulerAngles;
                     //Aux.x -= Diferencia * Sensibilidad;
                     //Volante.localEulerAngles = Aux;

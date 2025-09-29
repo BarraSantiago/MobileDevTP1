@@ -5,18 +5,18 @@ namespace Escenas.Juego
     public class JuegoEscMgr : MonoBehaviour
     {
         public float
-            TiempoEsperaFin =
+            tiempoEsperaFin =
                 25; //tiempo que espera la aplicacion para volver al video introductorio desp de terminada la partida
 
         public float
-            TiempoEsperaInicio =
+            tiempoEsperaInicio =
                 120; //tiempo que espera la aplicacion para volver al video introductorio desp de terminada la partida
 
-        private bool JuegoFinalizado;
+        private bool _juegoFinalizado;
 
-        private bool JuegoIniciado;
-        private float Tempo;
-        private float Tempo2;
+        private bool _juegoIniciado;
+        private float _tempo;
+        private float _tempo2;
 
         // Use this for initialization
         private void Start()
@@ -26,22 +26,22 @@ namespace Escenas.Juego
         // Update is called once per frame
         private void Update()
         {
-            if (JuegoFinalizado)
+            if (_juegoFinalizado)
             {
-                Tempo += Time.deltaTime;
-                if (Tempo > TiempoEsperaFin)
+                _tempo += Time.deltaTime;
+                if (_tempo > tiempoEsperaFin)
                 {
-                    Tempo = 0;
+                    _tempo = 0;
                     Application.LoadLevel(0);
                 }
             }
 
-            if (!JuegoIniciado)
+            if (!_juegoIniciado)
             {
-                Tempo2 += Time.deltaTime;
-                if (Tempo > TiempoEsperaInicio)
+                _tempo2 += Time.deltaTime;
+                if (_tempo > tiempoEsperaInicio)
                 {
-                    Tempo2 = 0;
+                    _tempo2 = 0;
                     Application.LoadLevel(0);
                 }
             }
@@ -57,12 +57,12 @@ namespace Escenas.Juego
 
         public void JuegoFinalizar()
         {
-            JuegoFinalizado = true;
+            _juegoFinalizado = true;
         }
 
         public void JuegoIniciar()
         {
-            JuegoIniciado = true;
+            _juegoIniciado = true;
         }
     }
 }

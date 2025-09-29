@@ -4,11 +4,11 @@ namespace EscenaDescarga
 {
     public class ManoRecept : ManejoPallets
     {
-        public bool TengoPallet;
+        public bool tengoPallet;
 
         private void FixedUpdate()
         {
-            TengoPallet = Tenencia();
+            tengoPallet = Tenencia();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -23,7 +23,7 @@ namespace EscenaDescarga
         {
             if (!Tenencia())
             {
-                pallet.Portador = gameObject;
+                pallet.portador = gameObject;
                 base.Recibir(pallet);
                 return true;
             }
@@ -40,16 +40,16 @@ namespace EscenaDescarga
                     if (Tenencia())
                         //Debug.Log(gameObject.name+ " / Dar()"+" / Tenencia=true");
                         if (receptor.name == "Right Hand")
-                            if (receptor.Recibir(Pallets[0]))
+                            if (receptor.Recibir(_pallets[0]))
                                 //Debug.Log(gameObject.name+ " / Dar()"+" / Tenencia=true"+" / receptor.Recibir(Pallets[0])=true");
-                                Pallets.RemoveAt(0);
+                                _pallets.RemoveAt(0);
                     //Debug.Log("pallet entregado a Mano de Mano");
                     break;
 
                 case "Cinta":
                     if (Tenencia())
-                        if (receptor.Recibir(Pallets[0]))
-                            Pallets.RemoveAt(0);
+                        if (receptor.Recibir(_pallets[0]))
+                            _pallets.RemoveAt(0);
                     //Debug.Log("pallet entregado a Cinta de Mano");
                     break;
 

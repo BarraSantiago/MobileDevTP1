@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class VeredaRespawn : MonoBehaviour
 {
-    public string PlayerTag = "Player";
+    public string playerTag = "Player";
 
     // Use this for initialization
     private void Start()
@@ -17,11 +17,11 @@ public class VeredaRespawn : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == PlayerTag) collision.gameObject.GetComponent<Respawn>().Respawnear();
+        if (collision.gameObject.tag == playerTag) collision.gameObject.GetComponent<Respawn>().Respawnear();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == PlayerTag) other.GetComponent<Respawn>().Respawnear();
+        if (other.tag == playerTag) other.GetComponent<Respawn>().Respawnear();
     }
 }

@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class Respawn : MonoBehaviour
 {
-    public float AngMax = 90; //angulo maximo antes del cual se reinicia el camion
+    public float angMax = 90; //angulo maximo antes del cual se reinicia el camion
 
-    public float RangMinDer;
-    public float RangMaxDer;
-    public float TiempDeNoColision = 2;
-    private readonly int VerifPorCuadro = 20;
-    private int Contador;
-    private CheakPoint CPAct;
-    private CheakPoint CPAnt;
+    public float rangMinDer;
+    public float rangMaxDer;
+    public float tiempDeNoColision = 2;
+    private readonly int _verifPorCuadro = 20;
+    private int _contador;
+    private CheakPoint _cpAct;
+    private CheakPoint _cpAnt;
 
-    private bool IgnorandoColision;
-    private float Tempo;
+    private bool _ignorandoColision;
+    private float _tempo;
 
     //--------------------------------------------------------//
 
@@ -33,20 +33,20 @@ public class Respawn : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (CPAct != null)
+        if (_cpAct != null)
         {
-            Contador++;
-            if (Contador == VerifPorCuadro)
+            _contador++;
+            if (_contador == _verifPorCuadro)
             {
-                Contador = 0;
-                if (AngMax < Quaternion.Angle(transform.rotation, CPAct.transform.rotation)) Respawnear();
+                _contador = 0;
+                if (angMax < Quaternion.Angle(transform.rotation, _cpAct.transform.rotation)) Respawnear();
             }
         }
 
-        if (IgnorandoColision)
+        if (_ignorandoColision)
         {
-            Tempo += T.GetDT();
-            if (Tempo > TiempDeNoColision) IgnorarColision(false);
+            _tempo += T.GetDT();
+            if (_tempo > tiempDeNoColision) IgnorarColision(false);
         }
     }
 
@@ -58,25 +58,25 @@ public class Respawn : MonoBehaviour
 
         gameObject.GetComponent<CarController>().SetGiro(0f);
 
-        if (CPAct.Habilitado())
+        if (_cpAct.Habilitado())
         {
-            if (GetComponent<Visualizacion>().LadoAct == Visualizacion.Lado.Der)
-                transform.position = CPAct.transform.position +
-                                     CPAct.transform.right * Random.Range(RangMinDer, RangMaxDer);
+            if (GetComponent<Visualizacion>().ladoAct == Visualizacion.Lado.Der)
+                transform.position = _cpAct.transform.position +
+                                     _cpAct.transform.right * Random.Range(rangMinDer, rangMaxDer);
             else
-                transform.position = CPAct.transform.position +
-                                     CPAct.transform.right * Random.Range(RangMinDer * -1, RangMaxDer * -1);
-            transform.forward = CPAct.transform.forward;
+                transform.position = _cpAct.transform.position +
+                                     _cpAct.transform.right * Random.Range(rangMinDer * -1, rangMaxDer * -1);
+            transform.forward = _cpAct.transform.forward;
         }
-        else if (CPAnt != null)
+        else if (_cpAnt != null)
         {
-            if (GetComponent<Visualizacion>().LadoAct == Visualizacion.Lado.Der)
-                transform.position = CPAnt.transform.position +
-                                     CPAnt.transform.right * Random.Range(RangMinDer, RangMaxDer);
+            if (GetComponent<Visualizacion>().ladoAct == Visualizacion.Lado.Der)
+                transform.position = _cpAnt.transform.position +
+                                     _cpAnt.transform.right * Random.Range(rangMinDer, rangMaxDer);
             else
-                transform.position = CPAnt.transform.position +
-                                     CPAnt.transform.right * Random.Range(RangMinDer * -1, RangMaxDer * -1);
-            transform.forward = CPAnt.transform.forward;
+                transform.position = _cpAnt.transform.position +
+                                     _cpAnt.transform.right * Random.Range(rangMinDer * -1, rangMaxDer * -1);
+            transform.forward = _cpAnt.transform.forward;
         }
 
         IgnorarColision(true);
@@ -107,12 +107,12 @@ public class Respawn : MonoBehaviour
         IgnorarColision(true);
     }
 
-    public void AgregarCP(CheakPoint cp)
+    public void AgregarCp(CheakPoint cp)
     {
-        if (cp != CPAct)
+        if (cp != _cpAct)
         {
-            CPAnt = CPAct;
-            CPAct = cp;
+            _cpAnt = _cpAct;
+            _cpAct = cp;
         }
     }
 
@@ -124,7 +124,7 @@ public class Respawn : MonoBehaviour
         //entonces colisionan, pero es dificil que suceda. 
 
         Physics.IgnoreLayerCollision(8, 9, b);
-        IgnorandoColision = b;
-        Tempo = 0;
+        _ignorandoColision = b;
+        _tempo = 0;
     }
 }

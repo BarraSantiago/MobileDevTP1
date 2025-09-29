@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Vereda : MonoBehaviour
 {
-    public string PlayerTag = "Player";
-    public float GiroPorSeg;
-    public float RestGiro; // valor que se le suma al giro cuando sale para restaurar la estabilidad
+    public string playerTag = "Player";
+    public float giroPorSeg;
+    public float restGiro; // valor que se le suma al giro cuando sale para restaurar la estabilidad
 
     // Use this for initialization
     private void Start()
@@ -18,12 +18,12 @@ public class Vereda : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == PlayerTag) other.SendMessage("SumaGiro", RestGiro);
+        if (other.tag == playerTag) other.SendMessage("SumaGiro", restGiro);
     }
 
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == PlayerTag) other.SendMessage("SumaGiro", GiroPorSeg * T.GetDT());
+        if (other.tag == playerTag) other.SendMessage("SumaGiro", giroPorSeg * T.GetDT());
     }
 }

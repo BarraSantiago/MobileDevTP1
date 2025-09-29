@@ -6,39 +6,39 @@ namespace EscenaDescarga
 {
     public class ControladorDeDescarga : MonoBehaviour
     {
-        public GameObject[] Componentes; //todos los componentes que debe activar en esta escena
+        public GameObject[] componentes; //todos los componentes que debe activar en esta escena
 
-        public Player Pj; //jugador
+        public Player pj; //jugador
 
-        public Pallet PEnMov;
+        public Pallet pEnMov;
 
         //las camaras que enciende y apaga
-        public GameObject CamaraConduccion;
-        public GameObject CamaraDescarga;
+        public GameObject camaraConduccion;
+        public GameObject camaraDescarga;
 
         //los prefab de los pallets
-        public GameObject Pallet1;
-        public GameObject Pallet2;
-        public GameObject Pallet3;
+        public GameObject pallet1;
+        public GameObject pallet2;
+        public GameObject pallet3;
 
 
-        public Estanteria Est1;
-        public Estanteria Est2;
-        public Estanteria Est3;
+        public Estanteria est1;
+        public Estanteria est2;
+        public Estanteria est3;
 
-        public Cinta Cin2;
+        public Cinta cin2;
 
-        public float Bonus;
+        public float bonus;
 
 
-        public AnimMngDesc ObjAnimado;
-        private MeshCollider CollCamion;
+        public AnimMngDesc objAnimado;
+        private MeshCollider _collCamion;
 
-        private int Contador;
+        private int _contador;
 
-        private Deposito2 Dep;
-        private List<Pallet.Valores> Ps = new();
-        private float TempoBonus;
+        private Deposito2 _dep;
+        private List<Pallet.Valores> _ps = new();
+        private float _tempoBonus;
 
 
         //--------------------------------------------------------------//
@@ -46,28 +46,28 @@ namespace EscenaDescarga
         // Use this for initialization
         private void Start()
         {
-            for (int i = 0; i < Componentes.Length; i++) Componentes[i].SetActiveRecursively(false);
+            for (int i = 0; i < componentes.Length; i++) componentes[i].SetActiveRecursively(false);
 
-            CollCamion = Pj.GetComponentInChildren<MeshCollider>();
-            Pj.SetContrDesc(this);
-            if (ObjAnimado != null)
-                ObjAnimado.ContrDesc = this;
+            _collCamion = pj.GetComponentInChildren<MeshCollider>();
+            pj.SetContrDesc(this);
+            if (objAnimado != null)
+                objAnimado.contrDesc = this;
         }
 
         // Update is called once per frame
         private void Update()
         {
             //contador de tiempo
-            if (PEnMov != null)
+            if (pEnMov != null)
             {
-                if (TempoBonus > 0)
+                if (_tempoBonus > 0)
                 {
-                    Bonus = TempoBonus * (float)PEnMov.Valor / PEnMov.Tiempo;
-                    TempoBonus -= T.GetDT();
+                    bonus = _tempoBonus * (float)pEnMov.valor / pEnMov.tiempo;
+                    _tempoBonus -= T.GetDT();
                 }
                 else
                 {
-                    Bonus = 0;
+                    bonus = 0;
                 }
             }
         }
@@ -76,53 +76,53 @@ namespace EscenaDescarga
 
         public void Activar(Deposito2 d)
         {
-            Dep = d; //recibe el deposito para que sepa cuando dejarlo ir al camion
-            CamaraConduccion.SetActiveRecursively(false); //apaga la camara de conduccion
+            _dep = d; //recibe el deposito para que sepa cuando dejarlo ir al camion
+            camaraConduccion.SetActiveRecursively(false); //apaga la camara de conduccion
 
             //activa los componentes
-            for (int i = 0; i < Componentes.Length; i++) Componentes[i].SetActiveRecursively(true);
+            for (int i = 0; i < componentes.Length; i++) componentes[i].SetActiveRecursively(true);
 
 
-            CollCamion.enabled = false;
-            Pj.CambiarADescarga();
+            _collCamion.enabled = false;
+            pj.CambiarADescarga();
 
 
             GameObject go;
             //asigna los pallets a las estanterias
-            for (int i = 0; i < Pj.Bolasas.Length; i++)
-                if (Pj.Bolasas[i] != null)
+            for (int i = 0; i < pj.bolasas.Length; i++)
+                if (pj.bolasas[i] != null)
                 {
-                    Contador++;
+                    _contador++;
 
-                    switch (Pj.Bolasas[i].Monto)
+                    switch (pj.bolasas[i].monto)
                     {
                         case Pallet.Valores.Valor1:
-                            go = Instantiate(Pallet1);
-                            Est1.Recibir(go.GetComponent<Pallet>());
+                            go = Instantiate(pallet1);
+                            est1.Recibir(go.GetComponent<Pallet>());
                             break;
 
                         case Pallet.Valores.Valor2:
-                            go = Instantiate(Pallet2);
-                            Est2.Recibir(go.GetComponent<Pallet>());
+                            go = Instantiate(pallet2);
+                            est2.Recibir(go.GetComponent<Pallet>());
                             break;
 
                         case Pallet.Valores.Valor3:
-                            go = Instantiate(Pallet3);
-                            Est3.Recibir(go.GetComponent<Pallet>());
+                            go = Instantiate(pallet3);
+                            est3.Recibir(go.GetComponent<Pallet>());
                             break;
                     }
                 }
 
             //animacion
-            ObjAnimado.Entrar();
+            objAnimado.Entrar();
         }
 
         //cuando sale de un estante
         public void SalidaPallet(Pallet p)
         {
-            PEnMov = p;
-            TempoBonus = p.Tiempo;
-            Pj.SacarBolasa();
+            pEnMov = p;
+            _tempoBonus = p.tiempo;
+            pj.SacarBolasa();
             //inicia el contador de tiempo para el bonus
         }
 
@@ -132,15 +132,15 @@ namespace EscenaDescarga
             //termina el contador y suma los pts
 
             //termina la descarga
-            PEnMov = null;
-            Contador--;
+            pEnMov = null;
+            _contador--;
 
-            Pj.Dinero += (int)Bonus;
+            pj.dinero += (int)bonus;
 
-            if (Contador <= 0)
+            if (_contador <= 0)
                 Finalizacion();
             else
-                Est2.EncenderAnim();
+                est2.EncenderAnim();
         }
 
         public void FinDelJuego()
@@ -148,39 +148,39 @@ namespace EscenaDescarga
             //metodo llamado por el GameManager para avisar que se termino el juego
 
             //desactiva lo que da y recibe las bolsas para que no halla mas flujo de estas
-            Est2.enabled = false;
-            Cin2.enabled = false;
+            est2.enabled = false;
+            cin2.enabled = false;
         }
 
         private void Finalizacion()
         {
-            ObjAnimado.Salir();
+            objAnimado.Salir();
         }
 
         public Pallet GetPalletEnMov()
         {
-            return PEnMov;
+            return pEnMov;
         }
 
         public void FinAnimEntrada()
         {
             //avisa cuando termino la animacion para que prosiga el juego
-            Est2.EncenderAnim();
+            est2.EncenderAnim();
         }
 
         public void FinAnimSalida()
         {
             //avisa cuando termino la animacion para que prosiga el juego
 
-            for (int i = 0; i < Componentes.Length; i++) Componentes[i].SetActiveRecursively(false);
+            for (int i = 0; i < componentes.Length; i++) componentes[i].SetActiveRecursively(false);
 
-            CamaraConduccion.SetActiveRecursively(true);
+            camaraConduccion.SetActiveRecursively(true);
 
-            CollCamion.enabled = true;
+            _collCamion.enabled = true;
 
-            Pj.CambiarAConduccion();
+            pj.CambiarAConduccion();
 
-            Dep.Soltar();
+            _dep.Soltar();
         }
     }
 }

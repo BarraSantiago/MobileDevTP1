@@ -5,24 +5,24 @@ namespace Prefabs.Bolsas
 {
 	public class Bolsa : MonoBehaviour
 	{
-		public Pallet.Valores Monto;
+		public Pallet.Valores monto;
 		//public int IdPlayer = 0;
-		public string TagPlayer = "";
-		public Texture2D ImagenInventario;
-		Player Pj = null;
+		public string tagPlayer = "";
+		public Texture2D imagenInventario;
+		Player _pj = null;
 	
-		bool Desapareciendo;
-		public GameObject Particulas;
-		public float TiempParts = 2.5f;
+		bool _desapareciendo;
+		public GameObject particulas;
+		public float tiempParts = 2.5f;
 
 		// Use this for initialization
 		void Start () 
 		{
-			Monto = Pallet.Valores.Valor2;
+			monto = Pallet.Valores.Valor2;
 		
 		
-			if(Particulas != null)
-				Particulas.SetActive(false);
+			if(particulas != null)
+				particulas.SetActive(false);
 			
 		}
 	
@@ -30,15 +30,15 @@ namespace Prefabs.Bolsas
 		void Update ()
 		{
 		
-			if(Desapareciendo)
+			if(_desapareciendo)
 			{
-				TiempParts -= Time.deltaTime;
-				if(TiempParts <= 0)
+				tiempParts -= Time.deltaTime;
+				if(tiempParts <= 0)
 				{
 					GetComponent<Renderer>().enabled = true;
 					GetComponent<Collider>().enabled = true;
 				
-					Particulas.GetComponent<ParticleSystem>().Stop();
+					particulas.GetComponent<ParticleSystem>().Stop();
 					gameObject.SetActive(false);
 				}
 			}
@@ -47,12 +47,12 @@ namespace Prefabs.Bolsas
 	
 		void OnTriggerEnter(Collider coll)
 		{
-			if(coll.tag == TagPlayer)
+			if(coll.tag == tagPlayer)
 			{
-				Pj = coll.GetComponent<Player>();
+				_pj = coll.GetComponent<Player>();
 				//if(IdPlayer == Pj.IdPlayer)
 				//{
-				if(Pj.AgregarBolsa(this))
+				if(_pj.AgregarBolsa(this))
 					Desaparecer();
 				//}
 			}
@@ -60,15 +60,15 @@ namespace Prefabs.Bolsas
 	
 		public void Desaparecer()
 		{
-			Particulas.GetComponent<ParticleSystem>().Play();
-			Desapareciendo = true;
+			particulas.GetComponent<ParticleSystem>().Play();
+			_desapareciendo = true;
 		
 			GetComponent<Renderer>().enabled = false;
 			GetComponent<Collider>().enabled = false;
 		
-			if(Particulas != null)
+			if(particulas != null)
 			{
-				Particulas.GetComponent<ParticleSystem>().Play();
+				particulas.GetComponent<ParticleSystem>().Play();
 			}
 	
 		}

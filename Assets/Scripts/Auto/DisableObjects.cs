@@ -6,27 +6,27 @@ namespace Auto
     {
         public GameObject theObject;
 
-        private Renderer[] renders;
+        private Renderer[] _renders;
 
         private void Start()
         {
             Component[] comps = theObject.transform.GetComponentsInChildren(typeof(Renderer));
-            renders = new Renderer[comps.Length];
+            _renders = new Renderer[comps.Length];
             for (int i = 0; i < comps.Length; i++)
-                renders[i] = comps[i] as Renderer;
-            if (renders == null)
-                renders = new Renderer[0];
+                _renders[i] = comps[i] as Renderer;
+            if (_renders == null)
+                _renders = new Renderer[0];
         }
 
         private void OnTriggerEnter()
         {
-            foreach (Renderer rend in renders)
+            foreach (Renderer rend in _renders)
                 rend.enabled = false;
         }
 
         private void OnTriggerExit()
         {
-            foreach (Renderer rend in renders)
+            foreach (Renderer rend in _renders)
                 rend.enabled = true;
         }
     }

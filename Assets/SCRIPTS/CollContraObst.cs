@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class CollContraObst : MonoBehaviour
 {
-    public float TiempEsp = 1;
-    public float TiempNoColl = 2;
+    public float tiempEsp = 1;
+    public float tiempNoColl = 2;
 
-    private Colisiones Colisiono = Colisiones.ConTodo;
-    private float Tempo1;
-    private float Tempo2;
+    private Colisiones _colisiono = Colisiones.ConTodo;
+    private float _tempo1;
+    private float _tempo2;
 
     // Use this for initialization
     private void Start()
@@ -18,26 +18,26 @@ public class CollContraObst : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        switch (Colisiono)
+        switch (_colisiono)
         {
             case Colisiones.ConTodo:
                 break;
 
             case Colisiones.EspDesact:
-                Tempo1 += T.GetDT();
-                if (Tempo1 >= TiempEsp)
+                _tempo1 += T.GetDT();
+                if (_tempo1 >= tiempEsp)
                 {
-                    Tempo1 = 0;
+                    _tempo1 = 0;
                     IgnorarColls(true);
                 }
 
                 break;
 
             case Colisiones.SinObst:
-                Tempo2 += T.GetDT();
-                if (Tempo2 >= TiempNoColl)
+                _tempo2 += T.GetDT();
+                if (_tempo2 >= tiempNoColl)
                 {
-                    Tempo2 = 0;
+                    _tempo2 = 0;
                     IgnorarColls(false);
                 }
 
@@ -54,10 +54,10 @@ public class CollContraObst : MonoBehaviour
 
     private void ColisionConObst()
     {
-        switch (Colisiono)
+        switch (_colisiono)
         {
             case Colisiones.ConTodo:
-                Colisiono = Colisiones.EspDesact;
+                _colisiono = Colisiones.EspDesact;
                 break;
 
             case Colisiones.EspDesact:
@@ -78,9 +78,9 @@ public class CollContraObst : MonoBehaviour
             Physics.IgnoreLayerCollision(9, 10, b);
 
         if (b)
-            Colisiono = Colisiones.SinObst;
+            _colisiono = Colisiones.SinObst;
         else
-            Colisiono = Colisiones.ConTodo;
+            _colisiono = Colisiones.ConTodo;
     }
 
     private enum Colisiones

@@ -14,7 +14,7 @@ namespace Escenas.Juego.Calibracion
             Finalizado
         }
 
-        public Player Pj;
+        public Player pj;
 
         /*
     public string ManoIzqName = "Left Hand";
@@ -27,16 +27,16 @@ namespace Escenas.Juego.Calibracion
     public float TiempCalib = 3;
     float Tempo = 0;
     */
-        public float TiempEspCalib = 3;
-        public Estados EstAct = Estados.Calibrando;
+        public float tiempEspCalib = 3;
+        public Estados estAct = Estados.Calibrando;
 
-        public ManejoPallets Partida;
-        public ManejoPallets Llegada;
-        public Pallet P;
+        public ManejoPallets partida;
+        public ManejoPallets llegada;
+        public Pallet p;
         public ManejoPallets palletsMover;
 
-        private GameManager GM;
-        private float Tempo2;
+        private GameManager _gm;
+        private float _tempo2;
 
         //----------------------------------------------------//
 
@@ -48,12 +48,12 @@ namespace Escenas.Juego.Calibracion
         collider.enabled = false;
         */
             palletsMover.enabled = false;
-            Pj.ContrCalib = this;
+            pj.contrCalib = this;
 
-            GM = GameObject.Find("GameMgr").GetComponent<GameManager>();
+            _gm = GameObject.Find("GameMgr").GetComponent<GameManager>();
 
-            P.CintaReceptora = Llegada.gameObject;
-            Partida.Recibir(P);
+            p.cintaReceptora = llegada.gameObject;
+            partida.Recibir(p);
 
             SetActivComp(false);
         }
@@ -61,11 +61,11 @@ namespace Escenas.Juego.Calibracion
         // Update is called once per frame
         private void Update()
         {
-            if (EstAct == Estados.Tutorial)
-                if (Tempo2 < TiempEspCalib)
+            if (estAct == Estados.Tutorial)
+                if (_tempo2 < tiempEspCalib)
                 {
-                    Tempo2 += T.GetDT();
-                    if (Tempo2 > TiempEspCalib) SetActivComp(true);
+                    _tempo2 += T.GetDT();
+                    if (_tempo2 > tiempEspCalib) SetActivComp(true);
                 }
 
             /*
@@ -139,27 +139,27 @@ namespace Escenas.Juego.Calibracion
 
         public void IniciarTesteo()
         {
-            EstAct = Estados.Tutorial;
+            estAct = Estados.Tutorial;
             palletsMover.enabled = true;
             //Reiniciar();
         }
 
         public void FinTutorial()
         {
-            EstAct = Estados.Finalizado;
+            estAct = Estados.Finalizado;
             palletsMover.enabled = false;
-            GM.FinCalibracion(Pj.IdPlayer);
+            _gm.FinCalibracion(pj.idPlayer);
         }
 
         private void SetActivComp(bool estado)
         {
-            if (Partida.GetComponent<Renderer>() != null)
-                Partida.GetComponent<Renderer>().enabled = estado;
-            Partida.GetComponent<Collider>().enabled = estado;
-            if (Llegada.GetComponent<Renderer>() != null)
-                Llegada.GetComponent<Renderer>().enabled = estado;
-            Llegada.GetComponent<Collider>().enabled = estado;
-            P.GetComponent<Renderer>().enabled = estado;
+            if (partida.GetComponent<Renderer>() != null)
+                partida.GetComponent<Renderer>().enabled = estado;
+            partida.GetComponent<Collider>().enabled = estado;
+            if (llegada.GetComponent<Renderer>() != null)
+                llegada.GetComponent<Renderer>().enabled = estado;
+            llegada.GetComponent<Collider>().enabled = estado;
+            p.GetComponent<Renderer>().enabled = estado;
         }
     }
 }

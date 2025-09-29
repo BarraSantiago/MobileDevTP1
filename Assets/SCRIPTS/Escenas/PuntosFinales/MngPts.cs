@@ -4,33 +4,33 @@ namespace Escenas.PuntosFinales
 {
     public class MngPts : MonoBehaviour
     {
-        public float TiempEmpAnims = 2.5f;
+        public float tiempEmpAnims = 2.5f;
 
-        public Vector2[] DineroPos;
-        public Vector2 DineroEsc;
-        public GUISkin GS_Dinero;
+        public Vector2[] dineroPos;
+        public Vector2 dineroEsc;
+        public GUISkin gsDinero;
 
-        public Vector2 GanadorPos;
-        public Vector2 GanadorEsc;
-        public Texture2D[] Ganadores;
-        public GUISkin GS_Ganador;
+        public Vector2 ganadorPos;
+        public Vector2 ganadorEsc;
+        public Texture2D[] ganadores;
+        public GUISkin gsGanador;
 
-        public GameObject Fondo;
+        public GameObject fondo;
 
-        public float TiempEspReiniciar = 10;
+        public float tiempEspReiniciar = 10;
 
 
-        public float TiempParpadeo = 0.7f;
+        public float tiempParpadeo = 0.7f;
 
-        public bool ActivadoAnims;
+        public bool activadoAnims;
 
-        private readonly Visualizacion Viz = new();
+        private readonly Visualizacion _viz = new();
 
-        private int IndexGanador = 0;
-        private bool PrimerImaParp = true;
-        private Rect R;
-        private float Tempo;
-        private float TempoParpadeo;
+        private int _indexGanador = 0;
+        private bool _primerImaParp = true;
+        private Rect _r;
+        private float _tempo;
+        private float _tempoParpadeo;
 
         //---------------------------------//
 
@@ -61,38 +61,38 @@ namespace Escenas.PuntosFinales
             if (Input.GetKeyDown(KeyCode.Backspace)) Application.LoadLevel(3);
 
 
-            TiempEspReiniciar -= Time.deltaTime;
-            if (TiempEspReiniciar <= 0) Application.LoadLevel(0);
+            tiempEspReiniciar -= Time.deltaTime;
+            if (tiempEspReiniciar <= 0) Application.LoadLevel(0);
 
 
-            if (ActivadoAnims)
+            if (activadoAnims)
             {
-                TempoParpadeo += Time.deltaTime;
+                _tempoParpadeo += Time.deltaTime;
 
-                if (TempoParpadeo >= TiempParpadeo)
+                if (_tempoParpadeo >= tiempParpadeo)
                 {
-                    TempoParpadeo = 0;
+                    _tempoParpadeo = 0;
 
-                    if (PrimerImaParp)
+                    if (_primerImaParp)
                     {
-                        PrimerImaParp = false;
+                        _primerImaParp = false;
                     }
                     else
                     {
-                        TempoParpadeo += 0.1f;
-                        PrimerImaParp = true;
+                        _tempoParpadeo += 0.1f;
+                        _primerImaParp = true;
                     }
                 }
             }
 
 
-            if (!ActivadoAnims)
+            if (!activadoAnims)
             {
-                Tempo += Time.deltaTime;
-                if (Tempo >= TiempEmpAnims)
+                _tempo += Time.deltaTime;
+                if (_tempo >= tiempEmpAnims)
                 {
-                    Tempo = 0;
-                    ActivadoAnims = true;
+                    _tempo = 0;
+                    activadoAnims = true;
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace Escenas.PuntosFinales
 
         private void OnGUI()
         {
-            if (ActivadoAnims)
+            if (activadoAnims)
             {
                 SetDinero();
                 SetCartelGanador();
@@ -160,13 +160,13 @@ namespace Escenas.PuntosFinales
             {
                 case DatosPartida.Lados.Der:
 
-                    GS_Ganador.box.normal.background = Ganadores[1];
+                    gsGanador.box.normal.background = ganadores[1];
 
                     break;
 
                 case DatosPartida.Lados.Izq:
 
-                    GS_Ganador.box.normal.background = Ganadores[0];
+                    gsGanador.box.normal.background = ganadores[0];
 
                     break;
             }
@@ -174,59 +174,59 @@ namespace Escenas.PuntosFinales
 
         private void SetDinero()
         {
-            GUI.skin = GS_Dinero;
+            GUI.skin = gsDinero;
 
-            R.width = DineroEsc.x * Screen.width / 100;
-            R.height = DineroEsc.y * Screen.height / 100;
+            _r.width = dineroEsc.x * Screen.width / 100;
+            _r.height = dineroEsc.y * Screen.height / 100;
 
 
             //IZQUIERDA
-            R.x = DineroPos[0].x * Screen.width / 100;
-            R.y = DineroPos[0].y * Screen.height / 100;
+            _r.x = dineroPos[0].x * Screen.width / 100;
+            _r.y = dineroPos[0].y * Screen.height / 100;
 
             if (DatosPartida.LadoGanadaor == DatosPartida.Lados.Izq) //izquierda
             {
-                if (!PrimerImaParp) //para que parpadee
-                    GUI.Box(R, "$" + Viz.PrepararNumeros(DatosPartida.PtsGanador));
+                if (!_primerImaParp) //para que parpadee
+                    GUI.Box(_r, "$" + _viz.PrepararNumeros(DatosPartida.PtsGanador));
             }
             else
             {
-                GUI.Box(R, "$" + Viz.PrepararNumeros(DatosPartida.PtsPerdedor));
+                GUI.Box(_r, "$" + _viz.PrepararNumeros(DatosPartida.PtsPerdedor));
             }
 
 
             //DERECHA
-            R.x = DineroPos[1].x * Screen.width / 100;
-            R.y = DineroPos[1].y * Screen.height / 100;
+            _r.x = dineroPos[1].x * Screen.width / 100;
+            _r.y = dineroPos[1].y * Screen.height / 100;
 
             if (DatosPartida.LadoGanadaor == DatosPartida.Lados.Der) //derecha
             {
-                if (!PrimerImaParp) //para que parpadee
-                    GUI.Box(R, "$" + Viz.PrepararNumeros(DatosPartida.PtsGanador));
+                if (!_primerImaParp) //para que parpadee
+                    GUI.Box(_r, "$" + _viz.PrepararNumeros(DatosPartida.PtsGanador));
             }
             else
             {
-                GUI.Box(R, "$" + Viz.PrepararNumeros(DatosPartida.PtsPerdedor));
+                GUI.Box(_r, "$" + _viz.PrepararNumeros(DatosPartida.PtsPerdedor));
             }
         }
 
         private void SetCartelGanador()
         {
-            GUI.skin = GS_Ganador;
+            GUI.skin = gsGanador;
 
-            R.width = GanadorEsc.x * Screen.width / 100;
-            R.height = GanadorEsc.y * Screen.height / 100;
-            R.x = GanadorPos.x * Screen.width / 100;
-            R.y = GanadorPos.y * Screen.height / 100;
+            _r.width = ganadorEsc.x * Screen.width / 100;
+            _r.height = ganadorEsc.y * Screen.height / 100;
+            _r.x = ganadorPos.x * Screen.width / 100;
+            _r.y = ganadorPos.y * Screen.height / 100;
 
             //if(PrimerImaParp)//para que parpadee
-            GUI.Box(R, "");
+            GUI.Box(_r, "");
         }
 
         public void DesaparecerGUI()
         {
-            ActivadoAnims = false;
-            Tempo = -100;
+            activadoAnims = false;
+            _tempo = -100;
         }
     }
 }

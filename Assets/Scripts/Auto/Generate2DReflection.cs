@@ -12,7 +12,7 @@ namespace Auto
         public Material reflectingMaterial;
 
         public Texture staticCubemap;
-        private Camera cam;
+        private Camera _cam;
 
         private void Start()
         {
@@ -51,21 +51,21 @@ namespace Auto
                 reflectingMaterial.SetTexture("_Cube", rtex);
             }
 
-            if (!cam)
+            if (!_cam)
             {
                 GameObject go = new GameObject("CubemapCamera", typeof(Camera));
                 go.hideFlags = HideFlags.HideAndDontSave;
-                cam = go.GetComponent<Camera>();
+                _cam = go.GetComponent<Camera>();
                 // cam.nearClipPlane = 0.05f;
-                cam.farClipPlane = 150f;
-                cam.enabled = false;
-                cam.cullingMask = mask;
+                _cam.farClipPlane = 150f;
+                _cam.enabled = false;
+                _cam.cullingMask = mask;
             }
 
-            cam.transform.position = Camera.main.transform.position;
-            cam.transform.rotation = Camera.main.transform.rotation;
+            _cam.transform.position = Camera.main.transform.position;
+            _cam.transform.rotation = Camera.main.transform.rotation;
 
-            cam.RenderToCubemap(rtex, 63);
+            _cam.RenderToCubemap(rtex, 63);
         }
     }
 }

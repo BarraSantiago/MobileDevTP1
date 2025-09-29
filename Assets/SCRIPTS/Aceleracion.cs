@@ -2,64 +2,64 @@ using UnityEngine;
 
 public class Aceleracion : MonoBehaviour
 {
-    public Transform ManoDer;
-    public Transform ManoIzq;
+    public Transform manoDer;
+    public Transform manoIzq;
 
-    public float AlturaMedia; //valor en eje Y que calibra el 0 de cada pedal
+    public float alturaMedia; //valor en eje Y que calibra el 0 de cada pedal
 
-    public float SensAcel = 1;
-    public float SensFren = 1;
+    public float sensAcel = 1;
+    public float sensFren = 1;
 
-    public Transform Camion; //lo que va a conducir
+    public Transform camion; //lo que va a conducir
 
     //pedales
-    public Transform PedalAcel;
-    public Transform PedalFren;
-    public float SensivPed = 1;
-    private float Acelerado;
-    private float DifDer;
+    public Transform pedalAcel;
+    public Transform pedalFren;
+    public float sensivPed = 1;
+    private float _acelerado;
+    private float _difDer;
 
 
-    private float DifIzq;
+    private float _difIzq;
 
-    private float Frenado;
-    private Vector3 PAclPosIni;
-    private Vector3 PFrnPosIni;
+    private float _frenado;
+    private Vector3 _pAclPosIni;
+    private Vector3 _pFrnPosIni;
 
     //---------------------------------------------------------//
 
     // Use this for initialization
     private void Start()
     {
-        PAclPosIni = PedalAcel.localPosition;
-        PFrnPosIni = PedalFren.localPosition;
+        _pAclPosIni = pedalAcel.localPosition;
+        _pFrnPosIni = pedalFren.localPosition;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        DifDer = ManoDer.position.y - AlturaMedia;
-        DifIzq = ManoIzq.position.y - AlturaMedia;
+        _difDer = manoDer.position.y - alturaMedia;
+        _difIzq = manoIzq.position.y - alturaMedia;
 
         //acelerar
-        if (DifDer > 0)
+        if (_difDer > 0)
         {
-            Acelerado = DifDer * SensAcel * Time.deltaTime;
+            _acelerado = _difDer * sensAcel * Time.deltaTime;
 
-            Camion.position += Acelerado * Camion.forward;
+            camion.position += _acelerado * camion.forward;
 
-            PedalAcel.localPosition = PAclPosIni - PedalAcel.forward * SensivPed * Acelerado;
+            pedalAcel.localPosition = _pAclPosIni - pedalAcel.forward * sensivPed * _acelerado;
         }
 
         //PedalFren.localPosition = PAclPosIni;
         //frenar
-        if (DifIzq > 0)
+        if (_difIzq > 0)
         {
-            Frenado = DifIzq * SensFren * Time.deltaTime;
+            _frenado = _difIzq * sensFren * Time.deltaTime;
 
-            Camion.position -= Frenado * Camion.forward;
+            camion.position -= _frenado * camion.forward;
 
-            PedalFren.localPosition = PFrnPosIni - PedalFren.forward * SensivPed * Frenado;
+            pedalFren.localPosition = _pFrnPosIni - pedalFren.forward * sensivPed * _frenado;
         }
         //PedalFren.localPosition = PFrnPosIni;
     }

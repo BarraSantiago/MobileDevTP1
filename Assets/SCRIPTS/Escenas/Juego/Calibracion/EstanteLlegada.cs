@@ -5,8 +5,8 @@ namespace Escenas.Juego.Calibracion
 {
     public class EstanteLlegada : ManejoPallets
     {
-        public GameObject Mano;
-        public ContrCalibracion ContrCalib;
+        public GameObject mano;
+        public ContrCalibracion contrCalib;
 
         //-----------------------------------------------//
 
@@ -24,9 +24,9 @@ namespace Escenas.Juego.Calibracion
 
         public override bool Recibir(Pallet p)
         {
-            p.Portador = gameObject;
+            p.portador = gameObject;
             base.Recibir(p);
-            ContrCalib.FinTutorial();
+            contrCalib.FinTutorial();
 
             return true;
         }

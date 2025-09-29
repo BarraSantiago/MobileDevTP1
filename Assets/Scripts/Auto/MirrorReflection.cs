@@ -9,31 +9,31 @@ namespace Auto
     [ExecuteInEditMode] // Make mirror live-update even when not in play mode
     public class MirrorReflection : MonoBehaviour
     {
-        private static bool s_InsideRendering;
-        public bool m_DisablePixelLights = true;
-        public bool m_DisableTreesAndDetails = true;
-        public int m_TextureSize = 256;
-        public float m_ClipPlaneOffset = 0.07f;
+        private static bool _sInsideRendering;
+        public bool mDisablePixelLights = true;
+        public bool mDisableTreesAndDetails = true;
+        public int mTextureSize = 256;
+        public float mClipPlaneOffset = 0.07f;
 
-        public LayerMask m_ReflectLayers = -1;
+        public LayerMask mReflectLayers = -1;
 
-        public RenderTexture m_ReflectionTexture;
+        public RenderTexture mReflectionTexture;
 
-        private readonly Hashtable m_ReflectionCameras = new(); // Camera -> Camera table
+        private readonly Hashtable _mReflectionCameras = new(); // Camera -> Camera table
 
 
         // Cleanup all the objects we possibly have created
         private void OnDisable()
         {
-            if (m_ReflectionTexture)
+            if (mReflectionTexture)
             {
-                DestroyImmediate(m_ReflectionTexture);
-                m_ReflectionTexture = null;
+                DestroyImmediate(mReflectionTexture);
+                mReflectionTexture = null;
             }
 
-            foreach (DictionaryEntry kvp in m_ReflectionCameras)
+            foreach (DictionaryEntry kvp in _mReflectionCameras)
                 DestroyImmediate(((Camera)kvp.Value).gameObject);
-            m_ReflectionCameras.Clear();
+            _mReflectionCameras.Clear();
         }
 
         // This is called when it's known that the object will be rendered by some
@@ -51,9 +51,9 @@ namespace Auto
                 return;
 
             // Safeguard from recursive reflections.        
-            if (s_InsideRendering)
+            if (_sInsideRendering)
                 return;
-            s_InsideRendering = true;
+            _sInsideRendering = true;
 
             Camera reflectionCamera;
             CreateMirrorObjects(cam, out reflectionCamera);
@@ -64,12 +64,12 @@ namespace Auto
 
             // Optionally disable pixel lights for reflection
             int oldPixelLightCount = QualitySettings.pixelLightCount;
-            if (m_DisablePixelLights)
+            if (mDisablePixelLights)
                 QualitySettings.pixelLightCount = 0;
 
             float detailDistance = Terrain.activeTerrain.detailObjectDistance;
             float treeDistance = Terrain.activeTerrain.treeDistance;
-            if (m_DisableTreesAndDetails)
+            if (mDisableTreesAndDetails)
             {
                 Terrain.activeTerrain.detailObjectDistance = 0;
                 Terrain.activeTerrain.treeDistance = 0;
@@ -79,7 +79,7 @@ namespace Auto
 
             // Render reflection
             // Reflect camera around reflection plane
-            float d = -Vector3.Dot(normal, pos) - m_ClipPlaneOffset;
+            float d = -Vector3.Dot(normal, pos) - mClipPlaneOffset;
             Vector4 reflectionPlane = new Vector4(normal.x, normal.y, normal.z, d);
 
             Matrix4x4 reflection = Matrix4x4.zero;
@@ -95,8 +95,8 @@ namespace Auto
             CalculateObliqueMatrix(ref projection, clipPlane);
             reflectionCamera.projectionMatrix = projection;
 
-            reflectionCamera.cullingMask = ~(1 << 4) & m_ReflectLayers.value; // never render water layer
-            reflectionCamera.targetTexture = m_ReflectionTexture;
+            reflectionCamera.cullingMask = ~(1 << 4) & mReflectLayers.value; // never render water layer
+            reflectionCamera.targetTexture = mReflectionTexture;
             GL.invertCulling = true;
             reflectionCamera.transform.position = newpos;
             Vector3 euler = cam.transform.eulerAngles;
@@ -107,7 +107,7 @@ namespace Auto
             Material[] materials = GetComponent<Renderer>().sharedMaterials;
             foreach (Material mat in materials)
                 if (mat.HasProperty("_ReflectionTex"))
-                    mat.SetTexture("_ReflectionTex", m_ReflectionTexture);
+                    mat.SetTexture("_ReflectionTex", mReflectionTexture);
 
             // Set matrix on the shader that transforms UVs from object space into screen
             // space. We want to just project reflection texture on screen.
@@ -120,15 +120,15 @@ namespace Auto
             foreach (Material mat in materials) mat.SetMatrix("_ProjMatrix", mtx);
 
             // Restore pixel light count
-            if (m_DisablePixelLights)
+            if (mDisablePixelLights)
                 QualitySettings.pixelLightCount = oldPixelLightCount;
-            if (m_DisableTreesAndDetails)
+            if (mDisableTreesAndDetails)
             {
                 Terrain.activeTerrain.detailObjectDistance = detailDistance;
                 Terrain.activeTerrain.treeDistance = treeDistance;
             }
 
-            s_InsideRendering = false;
+            _sInsideRendering = false;
         }
 
 
@@ -171,18 +171,18 @@ namespace Auto
             reflectionCamera = null;
 
             // Reflection render texture
-            if (!m_ReflectionTexture) // || m_OldReflectionTextureSize != m_TextureSize )
+            if (!mReflectionTexture) // || m_OldReflectionTextureSize != m_TextureSize )
             {
-                if (m_ReflectionTexture)
-                    DestroyImmediate(m_ReflectionTexture);
-                m_ReflectionTexture = new RenderTexture(m_TextureSize, m_TextureSize, 16);
-                m_ReflectionTexture.name = "__MirrorReflection" + GetInstanceID();
-                m_ReflectionTexture.isPowerOfTwo = true;
-                m_ReflectionTexture.hideFlags = HideFlags.DontSave;
+                if (mReflectionTexture)
+                    DestroyImmediate(mReflectionTexture);
+                mReflectionTexture = new RenderTexture(mTextureSize, mTextureSize, 16);
+                mReflectionTexture.name = "__MirrorReflection" + GetInstanceID();
+                mReflectionTexture.isPowerOfTwo = true;
+                mReflectionTexture.hideFlags = HideFlags.DontSave;
             }
 
             // Camera for reflection
-            reflectionCamera = m_ReflectionCameras[currentCamera] as Camera;
+            reflectionCamera = _mReflectionCameras[currentCamera] as Camera;
             if (!reflectionCamera) // catch both not-in-dictionary and in-dictionary-but-deleted-GO
             {
                 GameObject go = new GameObject("Mirror Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
@@ -193,12 +193,12 @@ namespace Auto
                 reflectionCamera.transform.rotation = transform.rotation;
                 reflectionCamera.gameObject.AddComponent<FlareLayer>();
                 go.hideFlags = HideFlags.HideAndDontSave;
-                m_ReflectionCameras[currentCamera] = reflectionCamera;
+                _mReflectionCameras[currentCamera] = reflectionCamera;
             }
         }
 
         // Extended sign: returns -1, 0 or 1 based on sign of a
-        private static float sgn(float a)
+        private static float Sgn(float a)
         {
             if (a > 0.0f) return 1.0f;
             if (a < 0.0f) return -1.0f;
@@ -208,7 +208,7 @@ namespace Auto
         // Given position/normal of the plane, calculates plane in camera space.
         private Vector4 CameraSpacePlane(Camera cam, Vector3 pos, Vector3 normal, float sideSign)
         {
-            Vector3 offsetPos = pos + normal * m_ClipPlaneOffset;
+            Vector3 offsetPos = pos + normal * mClipPlaneOffset;
             Matrix4x4 m = cam.worldToCameraMatrix;
             Vector3 cpos = m.MultiplyPoint(offsetPos);
             Vector3 cnormal = m.MultiplyVector(normal).normalized * sideSign;
@@ -220,8 +220,8 @@ namespace Auto
         private static void CalculateObliqueMatrix(ref Matrix4x4 projection, Vector4 clipPlane)
         {
             Vector4 q = projection.inverse * new Vector4(
-                sgn(clipPlane.x),
-                sgn(clipPlane.y),
+                Sgn(clipPlane.x),
+                Sgn(clipPlane.y),
                 1.0f,
                 1.0f
             );

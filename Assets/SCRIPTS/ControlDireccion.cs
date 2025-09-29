@@ -12,23 +12,23 @@ public class ControlDireccion : MonoBehaviour
     {
         Mouse,
         Kinect,
-        AWSD,
+        Awsd,
         Arrows
     }
 
-    public TipoInput InputAct = TipoInput.Mouse;
+    public TipoInput inputAct = TipoInput.Mouse;
 
-    public Transform ManoDer;
-    public Transform ManoIzq;
+    public Transform manoDer;
+    public Transform manoIzq;
 
-    public float MaxAng = 90;
-    public float DesSencibilidad = 90;
+    public float maxAng = 90;
+    public float desSencibilidad = 90;
 
-    public bool Habilitado = true;
+    public bool habilitado = true;
 
-    private Sentido DirAct;
+    private Sentido _dirAct;
 
-    private float Giro;
+    private float _giro;
     //float Diferencia;
 
     //---------------------------------------------------------//
@@ -41,10 +41,10 @@ public class ControlDireccion : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        switch (InputAct)
+        switch (inputAct)
         {
             case TipoInput.Mouse:
-                if (Habilitado)
+                if (habilitado)
                     gameObject.GetComponent<CarController>()
                         .SetGiro(MousePos.Relation(MousePos.AxisRelation.Horizontal));
 
@@ -66,39 +66,39 @@ public class ControlDireccion : MonoBehaviour
                 }
                 */
 
-                if (ManoIzq.position.y > ManoDer.position.y)
-                    DirAct = Sentido.Der;
+                if (manoIzq.position.y > manoDer.position.y)
+                    _dirAct = Sentido.Der;
                 else
-                    DirAct = Sentido.Izq;
+                    _dirAct = Sentido.Izq;
 
-                switch (DirAct)
+                switch (_dirAct)
                 {
                     case Sentido.Der:
-                        if (Angulo() <= MaxAng)
-                            Giro = Angulo() / (MaxAng + DesSencibilidad);
+                        if (Angulo() <= maxAng)
+                            _giro = Angulo() / (maxAng + desSencibilidad);
                         else
-                            Giro = 1;
+                            _giro = 1;
 
-                        if (Habilitado)
-                            gameObject.GetComponent<CarController>().SetGiro(Giro);
+                        if (habilitado)
+                            gameObject.GetComponent<CarController>().SetGiro(_giro);
 
                         break;
 
                     case Sentido.Izq:
-                        if (Angulo() <= MaxAng)
-                            Giro = Angulo() / (MaxAng + DesSencibilidad) * -1;
+                        if (Angulo() <= maxAng)
+                            _giro = Angulo() / (maxAng + desSencibilidad) * -1;
                         else
-                            Giro = -1;
+                            _giro = -1;
 
-                        if (Habilitado)
-                            gameObject.GetComponent<CarController>().SetGiro(Giro);
+                        if (habilitado)
+                            gameObject.GetComponent<CarController>().SetGiro(_giro);
 
                         break;
                 }
 
                 break;
-            case TipoInput.AWSD:
-                if (Habilitado)
+            case TipoInput.Awsd:
+                if (habilitado)
                 {
                     if (Input.GetKey(KeyCode.A)) gameObject.GetComponent<CarController>().SetGiro(-1);
                     if (Input.GetKey(KeyCode.D)) gameObject.GetComponent<CarController>().SetGiro(1);
@@ -106,7 +106,7 @@ public class ControlDireccion : MonoBehaviour
 
                 break;
             case TipoInput.Arrows:
-                if (Habilitado)
+                if (habilitado)
                 {
                     if (Input.GetKey(KeyCode.LeftArrow)) gameObject.GetComponent<CarController>().SetGiro(-1);
                     if (Input.GetKey(KeyCode.RightArrow)) gameObject.GetComponent<CarController>().SetGiro(1);
@@ -137,13 +137,13 @@ public class ControlDireccion : MonoBehaviour
             }
         */
 
-        return Giro;
+        return _giro;
     }
 
     private float Angulo()
     {
-        Vector2 diferencia = new Vector2(ManoDer.localPosition.x, ManoDer.localPosition.y)
-                             - new Vector2(ManoIzq.localPosition.x, ManoIzq.localPosition.y);
+        Vector2 diferencia = new Vector2(manoDer.localPosition.x, manoDer.localPosition.y)
+                             - new Vector2(manoIzq.localPosition.x, manoIzq.localPosition.y);
 
         return Vector2.Angle(diferencia, new Vector2(1, 0));
     }

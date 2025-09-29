@@ -8,33 +8,33 @@ namespace Prefabs.OBSTACULOS.Taxi
 	/// </summary>
 	public class TaxiComp : MonoBehaviour 
 	{
-		public string FinTaxiTag = "FinTaxi";
-		public string LimiteTag = "Terreno";
+		public string finTaxiTag = "FinTaxi";
+		public string limiteTag = "Terreno";
 	
-		public float Vel = 0;
+		public float vel = 0;
 	
-		public Vector2 TiempCadaCuantoDobla_MaxMin = Vector2.zero;
+		public Vector2 tiempCadaCuantoDoblaMaxMin = Vector2.zero;
 	
-		public float DuracionGiro = 0;
-		float TempoDurGir = 0;
+		public float duracionGiro = 0;
+		float _tempoDurGir = 0;
 	
-		public float AlcanceVerif = 0;
+		public float alcanceVerif = 0;
 	
-		public string TagTerreno = "";
+		public string tagTerreno = "";
 	
-		public bool Girando = false;
-		Vector3 RotIni;//pasa saber como volver a su posicion original
-		Vector3 PosIni;//para saber donde reiniciar al taxi
+		public bool girando = false;
+		Vector3 _rotIni;//pasa saber como volver a su posicion original
+		Vector3 _posIni;//para saber donde reiniciar al taxi
 	
-		float TiempEntreGiro = 0;
-		float TempoEntreGiro = 0;
+		float _tiempEntreGiro = 0;
+		float _tempoEntreGiro = 0;
 	
-		public float AngDeGiro = 30;
-		float TiempPGiro = 1;//1 es el tiempo que tarda en llegar al otro quaternion
+		public float angDeGiro = 30;
+		float _tiempPGiro = 1;//1 es el tiempo que tarda en llegar al otro quaternion
 	
-		RaycastHit RH;
+		RaycastHit _rh;
 	
-		bool Respawneando = false;
+		bool _respawneando = false;
 	
 	
 		enum Lado{Der, Izq}
@@ -44,37 +44,37 @@ namespace Prefabs.OBSTACULOS.Taxi
 		// Use this for initialization
 		void Start () 
 		{
-			TiempEntreGiro = (float) Random.Range(TiempCadaCuantoDobla_MaxMin.x, TiempCadaCuantoDobla_MaxMin.y);
-			RotIni = this.transform.localEulerAngles;
-			PosIni = transform.position;
+			_tiempEntreGiro = (float) Random.Range(tiempCadaCuantoDoblaMaxMin.x, tiempCadaCuantoDoblaMaxMin.y);
+			_rotIni = this.transform.localEulerAngles;
+			_posIni = transform.position;
 		}
 	
 		// Update is called once per frame
 		void Update () 
 		{
 		
-			if(Respawneando)
+			if(_respawneando)
 			{
 				if(Medicion())
 					Respawn();
 			}
 			else
 			{
-				if(Girando)
+				if(girando)
 				{
-					TempoDurGir += Time.deltaTime;
-					if(TempoDurGir > DuracionGiro)
+					_tempoDurGir += Time.deltaTime;
+					if(_tempoDurGir > duracionGiro)
 					{
-						TempoDurGir = 0;
+						_tempoDurGir = 0;
 						DejarDoblar();
 					}
 				}
 				else
 				{
-					TempoEntreGiro += Time.deltaTime;
-					if(TempoEntreGiro > TiempEntreGiro)
+					_tempoEntreGiro += Time.deltaTime;
+					if(_tempoEntreGiro > _tiempEntreGiro)
 					{
-						TempoEntreGiro = 0;
+						_tempoEntreGiro = 0;
 						Doblar();
 					}
 				}
@@ -85,24 +85,24 @@ namespace Prefabs.OBSTACULOS.Taxi
 	
 		void OnTriggerEnter(Collider coll)
 		{
-			if(coll.tag == FinTaxiTag)
+			if(coll.tag == finTaxiTag)
 			{
-				transform.position = PosIni;
-				transform.localEulerAngles = RotIni;
+				transform.position = _posIni;
+				transform.localEulerAngles = _rotIni;
 			}		
 		}
 	
 		void OnCollisionEnter(Collision coll)
 		{
-			if(coll.transform.tag == LimiteTag)
+			if(coll.transform.tag == limiteTag)
 			{
-				Respawneando = true;
+				_respawneando = true;
 			}
 		}
 	
 		void FixedUpdate () 
 		{
-			this.transform.position += transform.forward * Time.fixedDeltaTime * Vel;
+			this.transform.position += transform.forward * Time.fixedDeltaTime * vel;
 		}
 	
 		//--------------------------------------------------------------------//
@@ -112,9 +112,9 @@ namespace Prefabs.OBSTACULOS.Taxi
 			switch (lado)
 			{
 				case Lado.Der:
-					if(Physics.Raycast(transform.position, transform.right, out RH, AlcanceVerif))
+					if(Physics.Raycast(transform.position, transform.right, out _rh, alcanceVerif))
 					{
-						if(RH.transform.tag == TagTerreno)
+						if(_rh.transform.tag == tagTerreno)
 						{
 							return false;
 						}
@@ -122,9 +122,9 @@ namespace Prefabs.OBSTACULOS.Taxi
 					break;
 			
 				case Lado.Izq:
-					if(Physics.Raycast(transform.position, transform.right * (-1), out RH, AlcanceVerif))
+					if(Physics.Raycast(transform.position, transform.right * (-1), out _rh, alcanceVerif))
 					{
-						if(RH.transform.tag == TagTerreno)
+						if(_rh.transform.tag == tagTerreno)
 						{
 							return false;
 						}
@@ -137,7 +137,7 @@ namespace Prefabs.OBSTACULOS.Taxi
 	
 		void Doblar()
 		{
-			Girando = true;
+			girando = true;
 			//escoje un lado
 			Lado lado;
 			if((int)Random.Range(0,2) == 0)
@@ -159,37 +159,37 @@ namespace Prefabs.OBSTACULOS.Taxi
 			if(lado == TaxiComp.Lado.Der)
 			{
 				Vector3 vaux = transform.localEulerAngles;
-				vaux.y += AngDeGiro;
+				vaux.y += angDeGiro;
 				transform.localEulerAngles = vaux;
 			}
 			else
 			{
 				Vector3 vaux = transform.localEulerAngles;
-				vaux.y -= AngDeGiro;
+				vaux.y -= angDeGiro;
 				transform.localEulerAngles = vaux;
 			}
 		}
 	
 		void DejarDoblar()
 		{
-			Girando = false;
-			TiempEntreGiro = (float) Random.Range(TiempCadaCuantoDobla_MaxMin.x, TiempCadaCuantoDobla_MaxMin.y);
+			girando = false;
+			_tiempEntreGiro = (float) Random.Range(tiempCadaCuantoDoblaMaxMin.x, tiempCadaCuantoDoblaMaxMin.y);
 		
-			transform.localEulerAngles = RotIni;
+			transform.localEulerAngles = _rotIni;
 		}
 	
 		void Respawn()
 		{
-			Respawneando = false;
+			_respawneando = false;
 		
-			transform.position = PosIni;
-			transform.localEulerAngles = RotIni;
+			transform.position = _posIni;
+			transform.localEulerAngles = _rotIni;
 		}
 	
 		bool Medicion()
 		{
-			float dist1 = (GameManager.Instancia.Player1.transform.position - PosIni).magnitude;
-			float dist2 = (GameManager.Instancia.Player2.transform.position - PosIni).magnitude;
+			float dist1 = (GameManager.Instancia.player1.transform.position - _posIni).magnitude;
+			float dist2 = (GameManager.Instancia.player2.transform.position - _posIni).magnitude;
 		
 			if(dist1 > 4 && dist2 > 4)
 				return true;

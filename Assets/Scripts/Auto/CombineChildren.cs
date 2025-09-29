@@ -31,15 +31,15 @@ namespace Auto
                 MeshFilter filter = (MeshFilter)filters[i];
                 Renderer curRenderer = filters[i].GetComponent<Renderer>();
                 MeshCombineUtility.MeshInstance instance = new MeshCombineUtility.MeshInstance();
-                instance.mesh = filter.sharedMesh;
-                if (curRenderer != null && curRenderer.enabled && instance.mesh != null)
+                instance.Mesh = filter.sharedMesh;
+                if (curRenderer != null && curRenderer.enabled && instance.Mesh != null)
                 {
-                    instance.transform = myTransform * filter.transform.localToWorldMatrix;
+                    instance.Transform = myTransform * filter.transform.localToWorldMatrix;
 
                     Material[] materials = curRenderer.sharedMaterials;
                     for (int m = 0; m < materials.Length; m++)
                     {
-                        instance.subMeshIndex = Math.Min(m, instance.mesh.subMeshCount - 1);
+                        instance.SubMeshIndex = Math.Min(m, instance.Mesh.subMeshCount - 1);
 
                         ArrayList objects = (ArrayList)materialToMesh[materials[m]];
                         if (objects != null)

@@ -4,7 +4,7 @@ namespace Escenas.Juego.Calibracion
 {
     public class CopyMove : MonoBehaviour
     {
-        public Transform Target;
+        public Transform target;
         //public float Diferencia = 1;
 
         // Use this for initialization
@@ -15,7 +15,7 @@ namespace Escenas.Juego.Calibracion
         // Update is called once per frame
         private void LateUpdate()
         {
-            transform.position = Target.position; // + Target.transform.right * Diferencia;
+            transform.position = target.position; // + Target.transform.right * Diferencia;
             //transform.localRotation = Target.localRotation;
         }
     }

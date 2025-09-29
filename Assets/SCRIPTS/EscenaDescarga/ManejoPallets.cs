@@ -5,21 +5,21 @@ namespace EscenaDescarga
 {
     public class ManejoPallets : MonoBehaviour
     {
-        public ControladorDeDescarga Controlador;
-        protected int Contador = 0;
-        protected List<Pallet> Pallets = new();
+        public ControladorDeDescarga controlador;
+        protected int _contador = 0;
+        protected List<Pallet> _pallets = new();
 
         public virtual bool Recibir(Pallet pallet)
         {
             Debug.Log(gameObject.name + " / Recibir()");
-            Pallets.Add(pallet);
+            _pallets.Add(pallet);
             pallet.Pasaje();
             return true;
         }
 
         public bool Tenencia()
         {
-            if (Pallets.Count != 0)
+            if (_pallets.Count != 0)
                 return true;
             return false;
 

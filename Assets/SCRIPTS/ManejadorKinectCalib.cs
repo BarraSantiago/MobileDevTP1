@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class ManejadorKinectCalib : MonoBehaviour
 {
-    public GameObject[] ParaAct;
+    public GameObject[] paraAct;
 
     // Use this for initialization
     private void Start()
     {
-        for (int i = 0; i < ParaAct.Length; i++) ParaAct[i].SetActiveRecursively(false);
+        for (int i = 0; i < paraAct.Length; i++) paraAct[i].SetActiveRecursively(false);
     }
 
     // Update is called once per frame
@@ -16,26 +16,26 @@ public class ManejadorKinectCalib : MonoBehaviour
         //DISTINTAS CAMARAS
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            for (int i = 0; i < ParaAct.Length; i++) ParaAct[i].SetActiveRecursively(false);
+            for (int i = 0; i < paraAct.Length; i++) paraAct[i].SetActiveRecursively(false);
 
-            if (ParaAct.Length >= 1)
-                ParaAct[0].SetActiveRecursively(true);
+            if (paraAct.Length >= 1)
+                paraAct[0].SetActiveRecursively(true);
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            for (int i = 0; i < ParaAct.Length; i++) ParaAct[i].SetActiveRecursively(false);
+            for (int i = 0; i < paraAct.Length; i++) paraAct[i].SetActiveRecursively(false);
 
-            if (ParaAct.Length >= 2)
-                ParaAct[1].SetActiveRecursively(true);
+            if (paraAct.Length >= 2)
+                paraAct[1].SetActiveRecursively(true);
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-            for (int i = 0; i < ParaAct.Length; i++) ParaAct[i].SetActiveRecursively(false);
+            for (int i = 0; i < paraAct.Length; i++) paraAct[i].SetActiveRecursively(false);
 
-            if (ParaAct.Length >= 3)
-                ParaAct[2].SetActiveRecursively(true);
+            if (paraAct.Length >= 3)
+                paraAct[2].SetActiveRecursively(true);
         }
 
         //SALE AL VIDEO DE INTRO

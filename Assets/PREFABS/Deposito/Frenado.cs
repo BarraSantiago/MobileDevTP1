@@ -4,23 +4,23 @@ namespace Prefabs.Deposito
 {
 	public class Frenado : MonoBehaviour 
 	{
-		public float VelEntrada = 0;
-		public string TagDeposito = "Deposito";
+		public float velEntrada = 0;
+		public string tagDeposito = "Deposito";
 	
-		ControlDireccion KInput;
+		ControlDireccion _kInput;
 	
 	
-		float DagMax = 15f;
-		float DagIni = 1f;
-		int Contador = 0;
-		int CantMensajes = 10;
-		float TiempFrenado = 0.5f;
-		float Tempo = 0f;
+		float _dagMax = 15f;
+		float _dagIni = 1f;
+		int _contador = 0;
+		int _cantMensajes = 10;
+		float _tiempFrenado = 0.5f;
+		float _tempo = 0f;
 	
-		Vector3 Destino;
+		Vector3 _destino;
 	
-		public bool Frenando = false;
-		bool ReduciendoVel = false;
+		public bool frenando = false;
+		bool _reduciendoVel = false;
 	
 		//-----------------------------------------------------//
 	
@@ -39,15 +39,15 @@ namespace Prefabs.Deposito
 	
 		void FixedUpdate ()
 		{
-			if(Frenando)
+			if(frenando)
 			{
-				Tempo += T.GetFDT();
-				if(Tempo >= (TiempFrenado / CantMensajes) * Contador)
+				_tempo += T.GetFdt();
+				if(_tempo >= (_tiempFrenado / _cantMensajes) * _contador)
 				{
-					Contador++;
+					_contador++;
 					//gameObject.SendMessage("SetDragZ", (float) (DagMax / CantMensajes) * Contador);
 				}
-				if(Tempo >= TiempFrenado)
+				if(_tempo >= _tiempFrenado)
 				{
 					//termino de frenar, que haga lo que quiera
 				}
@@ -56,16 +56,16 @@ namespace Prefabs.Deposito
 	
 		void OnTriggerEnter(Collider other) 
 		{
-			if(other.tag == TagDeposito)
+			if(other.tag == tagDeposito)
 			{
 				Deposito2 dep = other.GetComponent<Deposito2>();
-				if(dep.Vacio)
+				if(dep.vacio)
 				{	
 					if(this.GetComponent<Player>().ConBolasas())
 					{
 						dep.Entrar(this.GetComponent<Player>());
-						Destino = other.transform.position;
-						transform.forward = Destino - transform.position;
+						_destino = other.transform.position;
+						transform.forward = _destino - transform.position;
 						Frenar();
 					}				
 				}
@@ -82,11 +82,11 @@ namespace Prefabs.Deposito
 
 			GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 		
-			Frenando = true;
+			frenando = true;
 		
 			//gameObject.SendMessage("SetDragZ", 25f);
-			Tempo = 0;
-			Contador = 0;
+			_tempo = 0;
+			_contador = 0;
 		}
 	
 		public void RestaurarVel()
@@ -94,9 +94,9 @@ namespace Prefabs.Deposito
 			//Debug.Log(gameObject.name + "restaura la velociad");
 			GetComponent<ControlDireccion>().enabled = true;
 			gameObject.GetComponent<CarController>().SetAcel(1);
-			Frenando = false;
-			Tempo = 0;
-			Contador = 0;
+			frenando = false;
+			_tempo = 0;
+			_contador = 0;
 			//gameObject.SendMessage("SetDragZ", 1f);
 		}
 	}

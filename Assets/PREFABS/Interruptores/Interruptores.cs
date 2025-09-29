@@ -4,11 +4,11 @@ namespace Prefabs.Interruptores
 {
 	public class Interruptores : MonoBehaviour 
 	{
-		public string TagPlayer = "Player";
+		public string tagPlayer = "Player";
 	
-		public GameObject[] AActivar;
+		public GameObject[] aActivar;
 	
-		public bool Activado = false;
+		public bool activado = false;
 
 		// Use this for initialization
 		void Start () 
@@ -24,15 +24,15 @@ namespace Prefabs.Interruptores
 	
 		void OnTriggerEnter(Collider other) 
 		{
-			if(!Activado)
+			if(!activado)
 			{
-				if(other.tag == TagPlayer)
+				if(other.tag == tagPlayer)
 				{
-					Activado = true;
+					activado = true;
 					print("activado interrutor");
-					for(int i = 0; i < AActivar.Length; i++)
+					for(int i = 0; i < aActivar.Length; i++)
 					{
-						AActivar[i].SetActiveRecursively(true);
+						aActivar[i].SetActiveRecursively(true);
 					}
 				}
 			}
