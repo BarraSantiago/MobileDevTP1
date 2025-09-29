@@ -1,366 +1,370 @@
 /**
-	asset cleaner
-	Copyright (c) 2015 Tatsuhiko Yamamura
+    asset cleaner
+    Copyright (c) 2015 Tatsuhiko Yamamura
 
     This software is released under the MIT License.
     http://opensource.org/licenses/mit-license.php
 */
-using UnityEngine;
-using System.Collections;
+
+using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEditor;
 using System.IO;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using UnityEditor;
 
-namespace AssetClean
+namespace Cleaner.Editor
 {
-	public class ClassReferenceCollection : IReferenceCollection
-	{
-		// guid : types
-		private List<CollectionData> references = null;
+    public class ClassReferenceCollection : IReferenceCollection
+    {
+        public static readonly string xmlPath = "referenceType2File.xml";
 
-		// type : guid
-		private Dictionary<System.Type, List<string>> code2FileDic = new Dictionary<System.Type, List<string>> ();
-		private List<TypeDate> fileTypeList = null;
-		public static readonly string xmlPath = "referenceType2File.xml";
+        // type : guid
+        private readonly Dictionary<Type, List<string>> code2FileDic = new();
+        private readonly List<TypeDate> fileTypeList;
 
-		private List<TypeDate> fileTypeXML {
-			get {
-				if (File.Exists (xmlPath) == true) {
-					using (var reader = new StreamReader(xmlPath)) {
-						XmlSerializer serialize = new XmlSerializer (typeof(List<TypeDate>));
-						return (List<TypeDate>)serialize.Deserialize (reader);
-					}
-				} else {
-					return new List<TypeDate> ();
-				}
-			}
-			set {
-				using (var writer = new StreamWriter(xmlPath)) {
-					XmlSerializer serialize = new XmlSerializer (typeof(List<TypeDate>));
-					serialize.Serialize (writer, value);
-				}
-			}
-		}
+        private readonly bool isSaveEditorCode;
 
-		TypeDate GetTypeData (string guid)
-		{
-			if (fileTypeList.Exists (c => c.guid == guid) == false) {
+        // guid : types
+        private List<CollectionData> references;
 
-				var path = AssetDatabase.GUIDToAssetPath(guid);
+        public ClassReferenceCollection(bool saveStiroCode = false)
+        {
+            isSaveEditorCode = saveStiroCode;
+            fileTypeList = fileTypeXML;
+        }
 
-				fileTypeList.Add (new TypeDate (){
-					guid = guid,
-					fileName = path,
-					timeStamp = File.GetLastWriteTime(path)
-				});
-			}
+        private List<TypeDate> fileTypeXML
+        {
+            get
+            {
+                if (File.Exists(xmlPath))
+                    using (var reader = new StreamReader(xmlPath))
+                    {
+                        var serialize = new XmlSerializer(typeof(List<TypeDate>));
+                        return (List<TypeDate>)serialize.Deserialize(reader);
+                    }
 
-			return fileTypeList.First (c => c.guid == guid);
-		}
+                return new List<TypeDate>();
+            }
+            set
+            {
+                using (var writer = new StreamWriter(xmlPath))
+                {
+                    var serialize = new XmlSerializer(typeof(List<TypeDate>));
+                    serialize.Serialize(writer, value);
+                }
+            }
+        }
 
-		private bool isSaveEditorCode = false;
+        public void Init(List<CollectionData> refs)
+        {
+            references = refs;
+        }
 
-		public ClassReferenceCollection (bool saveStiroCode = false)
-		{
-			isSaveEditorCode = saveStiroCode;
-			fileTypeList = fileTypeXML;
-		}
+        public void CollectionFiles()
+        {
+            // connect each classes.
+            var firstPassList = new List<string>();
+            if (Directory.Exists("Assets/Plugins"))
+                firstPassList.AddRange(CodeList("Assets/Plugins"));
+            if (Directory.Exists("Assets/Standard Assets"))
+                firstPassList.AddRange(CodeList("Assets/Standard Assets"));
 
-		public void Init (List<CollectionData> refs)
-		{
-			references = refs;
-		}
+            // Connect the files and class.
+            var codes = CodeList("Assets/").Where(c => !firstPassList.Contains(c));
 
-		public void CollectionFiles ()
-		{
+            var allFirstpassTypes = collectionAllFastspassClasses();
+            CollectionCodeFileDictionary(allFirstpassTypes, firstPassList.ToArray());
 
-			// connect each classes.
-			var firstPassList = new List<string> ();
-			if (Directory.Exists ("Assets/Plugins"))
-				firstPassList.AddRange (CodeList ("Assets/Plugins"));
-			if (Directory.Exists ("Assets/Standard Assets"))
-				firstPassList.AddRange (CodeList ("Assets/Standard Assets"));
-
-			// Connect the files and class.
-			var codes = CodeList ("Assets/").Where (c => firstPassList.Contains (c) == false);
-
-			var allFirstpassTypes = collectionAllFastspassClasses ();
-			CollectionCodeFileDictionary (allFirstpassTypes, firstPassList.ToArray ());
-
-			var alltypes = CollectionAllClasses ();
-			CollectionCodeFileDictionary (alltypes, codes.ToArray ());
-			alltypes.AddRange (allFirstpassTypes);
+            var alltypes = CollectionAllClasses();
+            CollectionCodeFileDictionary(alltypes, codes.ToArray());
+            alltypes.AddRange(allFirstpassTypes);
 
 
-			fileTypeXML = fileTypeList;
-			
-			foreach (var type in alltypes) {
-				List<string> list = null;
-				if (code2FileDic.ContainsKey (type) == false) {
-					list = new List<string> ();
-					code2FileDic.Add (type, list);
-				} else {
-					list = code2FileDic [type];
-				}
-				
-				var fullName = type.FullName;
-				var assembly = type.Assembly.FullName;
-				if (fileTypeList.Exists (c => c.assemblly == assembly && c.typeFullName.Contains (fullName))) {
-					var datas = fileTypeList.Where (c => c.assemblly == assembly && c.typeFullName.Contains (fullName));
-					foreach (var data in datas) {
-						list.Add (data.guid);
-					}
-				}
-			}
+            fileTypeXML = fileTypeList;
 
-			float count = 1, max = firstPassList.Count;
-			foreach (var codepath in firstPassList) {
-				EditorUtility.DisplayProgressBar ("analytics", codepath, count++ / max);
-				CollectionReferenceClasses (AssetDatabase.AssetPathToGUID (codepath), allFirstpassTypes);
-			}
-			count = 1;
-			max = codes.Count();
-			foreach (var codepath in codes) {
-				EditorUtility.DisplayProgressBar ("analytics", codepath, count++ / max);
-				CollectionReferenceClasses (AssetDatabase.AssetPathToGUID (codepath), alltypes);
-			}
+            foreach (var type in alltypes)
+            {
+                List<string> list = null;
+                if (!code2FileDic.ContainsKey(type))
+                {
+                    list = new List<string>();
+                    code2FileDic.Add(type, list);
+                }
+                else
+                {
+                    list = code2FileDic[type];
+                }
 
-			if (isSaveEditorCode) {
-				CollectionCustomEditorClasses (alltypes);
-			}
-		}
+                var fullName = type.FullName;
+                var assembly = type.Assembly.FullName;
+                if (fileTypeList.Exists(c => c.assemblly == assembly && c.typeFullName.Contains(fullName)))
+                {
+                    var datas = fileTypeList.Where(c => c.assemblly == assembly && c.typeFullName.Contains(fullName));
+                    foreach (var data in datas) list.Add(data.guid);
+                }
+            }
 
-		List<string> CodeList (string path)
-		{
-			string[] codes = Directory.GetFiles (path, "*.cs", SearchOption.AllDirectories);
+            float count = 1, max = firstPassList.Count;
+            foreach (var codepath in firstPassList)
+            {
+                EditorUtility.DisplayProgressBar("analytics", codepath, count++ / max);
+                CollectionReferenceClasses(AssetDatabase.AssetPathToGUID(codepath), allFirstpassTypes);
+            }
 
-			List<string> needUpdateFileList = new List<string> ();
+            count = 1;
+            max = codes.Count();
+            foreach (var codepath in codes)
+            {
+                EditorUtility.DisplayProgressBar("analytics", codepath, count++ / max);
+                CollectionReferenceClasses(AssetDatabase.AssetPathToGUID(codepath), alltypes);
+            }
 
-			foreach (var code in codes) {
-				var guid = AssetDatabase.AssetPathToGUID (code);
-				if (fileTypeList.Exists (c => c.guid == guid) == false) {
-					needUpdateFileList.Add (code);
-					continue;
-				}
+            if (isSaveEditorCode) CollectionCustomEditorClasses(alltypes);
+        }
 
-				var filetype = GetTypeData (guid);
+        private TypeDate GetTypeData(string guid)
+        {
+            if (!fileTypeList.Exists(c => c.guid == guid))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
 
-				var timeStamp = filetype.timeStamp;
-				var time = File.GetLastWriteTime (code);
-				if (time != timeStamp) {
-					filetype.timeStamp = time;
-					needUpdateFileList.Add (code);
-					continue;
-				}
-			}
-			return needUpdateFileList;
-		}
+                fileTypeList.Add(new TypeDate
+                {
+                    guid = guid,
+                    fileName = path,
+                    timeStamp = File.GetLastWriteTime(path)
+                });
+            }
 
-		void CollectionCodeFileDictionary (List<System.Type> alltypes, string[] codes)
-		{
-			float count = 1;
-			foreach (var codePath in codes) {
-				EditorUtility.DisplayProgressBar ("checking", "search files", count++ / codes.Length);
+            return fileTypeList.First(c => c.guid == guid);
+        }
 
-				// connect file and classes.
-				var code = StripComment (System.IO.File.ReadAllText (codePath));
-				var guid = AssetDatabase.AssetPathToGUID (codePath);
+        private List<string> CodeList(string path)
+        {
+            var codes = Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories);
 
-				var typeList = GetTypeData (guid);
-				typeList.typeFullName.Clear ();
+            var needUpdateFileList = new List<string>();
 
-				foreach (var type in alltypes) {
-					
-					if (type.IsNested) {
-						continue;
-					}
+            foreach (var code in codes)
+            {
+                var guid = AssetDatabase.AssetPathToGUID(code);
+                if (!fileTypeList.Exists(c => c.guid == guid))
+                {
+                    needUpdateFileList.Add(code);
+                    continue;
+                }
 
-					if (string.IsNullOrEmpty (type.Namespace) == false) {
-						var namespacepattern = string.Format ("namespace\\s*{0}[{{\\s\\n]", type.Namespace);
-						if (Regex.IsMatch (code, namespacepattern) == false) {
-							continue;
-						}
-					}
+                var filetype = GetTypeData(guid);
 
-					string typeName = type.IsGenericTypeDefinition ? type.GetGenericTypeDefinition ().Name.Split ('`') [0] : type.Name;
-					if (type.IsClass) {
-						if (Regex.IsMatch (code, string.Format ("class\\s*{0}?[\\s:<{{]", typeName))) {
-							typeList.Add (type);
+                var timeStamp = filetype.timeStamp;
+                var time = File.GetLastWriteTime(code);
+                if (time != timeStamp)
+                {
+                    filetype.timeStamp = time;
+                    needUpdateFileList.Add(code);
+                }
+            }
 
-							var nested = type.GetNestedTypes (BindingFlags.Public | BindingFlags.Instance);
+            return needUpdateFileList;
+        }
 
-							foreach (var nestedType in nested) {
-								typeList.Add (nestedType);
-							}
+        private void CollectionCodeFileDictionary(List<Type> alltypes, string[] codes)
+        {
+            float count = 1;
+            foreach (var codePath in codes)
+            {
+                EditorUtility.DisplayProgressBar("checking", "search files", count++ / codes.Length);
 
-							continue;
-						}
-					}else if( type.IsInterface){
+                // connect file and classes.
+                var code = StripComment(File.ReadAllText(codePath));
+                var guid = AssetDatabase.AssetPathToGUID(codePath);
 
-						if (Regex.IsMatch (code, string.Format ("interface\\s*{0}[\\s<{{]", typeName))) {
-							typeList.Add (type);
-							continue;
-						}
-					} else if (type.IsEnum) {
-						
-						if (Regex.IsMatch (code, string.Format ("enum\\s*{0}[\\s{{]", type.Name))) {
-							typeList.Add (type);
-							continue;
-						}
-					} else {
-						if (Regex.IsMatch (code, string.Format ("struct\\s*{0}[\\s:<{{]", typeName))) {
-							typeList.Add (type);
-							continue;
-						}
-						if (Regex.IsMatch (code, string.Format ("delegate\\s*{0}\\s\\(", typeName))) {
-							typeList.Add (type);
-							continue;
-						}
-					}
-				}
-			}
-		}
+                var typeList = GetTypeData(guid);
+                typeList.typeFullName.Clear();
 
-		List<System.Type> CollectionAllClasses ()
-		{
-			List<System.Type> alltypes = new List<System.Type> ();
-		
-			if (File.Exists ("Library/ScriptAssemblies/Assembly-CSharp.dll"))
-				alltypes.AddRange (Assembly.LoadFile ("Library/ScriptAssemblies/Assembly-CSharp.dll").GetTypes ());
-			if (isSaveEditorCode && File.Exists ("Library/ScriptAssemblies/Assembly-CSharp-Editor.dll"))
-				alltypes.AddRange (Assembly.LoadFile ("Library/ScriptAssemblies/Assembly-CSharp-Editor.dll").GetTypes ());
+                foreach (var type in alltypes)
+                {
+                    if (type.IsNested) continue;
 
-			return alltypes	.ToList ();
-		}
+                    if (!string.IsNullOrEmpty(type.Namespace))
+                    {
+                        var namespacepattern = string.Format("namespace\\s*{0}[{{\\s\\n]", type.Namespace);
+                        if (!Regex.IsMatch(code, namespacepattern)) continue;
+                    }
 
-		List<System.Type> collectionAllFastspassClasses ()
-		{
-			List<System.Type> alltypes = new List<System.Type> ();
-			if (File.Exists ("Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll"))
-				alltypes.AddRange (Assembly.LoadFile ("Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll").GetTypes ());
-			if (isSaveEditorCode && File.Exists ("Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll"))
-				alltypes.AddRange (Assembly.LoadFile ("Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll").GetTypes ());
-			return alltypes;
-		}
+                    var typeName = type.IsGenericTypeDefinition
+                        ? type.GetGenericTypeDefinition().Name.Split('`')[0]
+                        : type.Name;
+                    if (type.IsClass)
+                    {
+                        if (Regex.IsMatch(code, string.Format("class\\s*{0}?[\\s:<{{]", typeName)))
+                        {
+                            typeList.Add(type);
 
-		public static string StripComment (string code)
-		{
-			code = Regex.Replace (code, "//.*[\\n\\r]", "");
-			code = Regex.Replace (code, "/\\*.*[\\n\\r]\\*/", "");
-			return code;
-		}
-		
-		void CollectionReferenceClasses (string guid, List<System.Type> types)
-		{
-			var codePath = AssetDatabase.GUIDToAssetPath (guid);
-			if (string.IsNullOrEmpty (codePath) || File.Exists (codePath) == false) {
-				return;
-			}
+                            var nested = type.GetNestedTypes(BindingFlags.Public | BindingFlags.Instance);
 
-			var code = StripComment (System.IO.File.ReadAllText (codePath));
+                            foreach (var nestedType in nested) typeList.Add(nestedType);
+                        }
+                    }
+                    else if (type.IsInterface)
+                    {
+                        if (Regex.IsMatch(code, string.Format("interface\\s*{0}[\\s<{{]", typeName)))
+                            typeList.Add(type);
+                    }
+                    else if (type.IsEnum)
+                    {
+                        if (Regex.IsMatch(code, string.Format("enum\\s*{0}[\\s{{]", type.Name))) typeList.Add(type);
+                    }
+                    else
+                    {
+                        if (Regex.IsMatch(code, string.Format("struct\\s*{0}[\\s:<{{]", typeName)))
+                        {
+                            typeList.Add(type);
+                            continue;
+                        }
 
-			List<string> referenceList = null;
-			CollectionData reference = null;
+                        if (Regex.IsMatch(code, string.Format("delegate\\s*{0}\\s\\(", typeName))) typeList.Add(type);
+                    }
+                }
+            }
+        }
 
-			if (references.Exists (c => c.fileGuid == guid) == false) {
-				referenceList = new List<string> ();
-				reference = new CollectionData () {
-					fileGuid = guid,
-					referenceGids = referenceList,
-				};
-				references.Add (reference);
-			} else {
-				reference = references.Find (c => c.fileGuid == guid);
-				referenceList = reference.referenceGids;
-			}
+        private List<Type> CollectionAllClasses()
+        {
+            var alltypes = new List<Type>();
 
-			referenceList.Clear ();
+            if (File.Exists("Library/ScriptAssemblies/Assembly-CSharp.dll"))
+                alltypes.AddRange(Assembly.LoadFile("Library/ScriptAssemblies/Assembly-CSharp.dll").GetTypes());
+            if (isSaveEditorCode && File.Exists("Library/ScriptAssemblies/Assembly-CSharp-Editor.dll"))
+                alltypes.AddRange(Assembly.LoadFile("Library/ScriptAssemblies/Assembly-CSharp-Editor.dll").GetTypes());
 
-			var timestamp = File.GetLastWriteTime (codePath);
-			reference.timeStamp = timestamp;
+            return alltypes.ToList();
+        }
 
-			foreach (var type in types) {
+        private List<Type> collectionAllFastspassClasses()
+        {
+            var alltypes = new List<Type>();
+            if (File.Exists("Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll"))
+                alltypes.AddRange(
+                    Assembly.LoadFile("Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll").GetTypes());
+            if (isSaveEditorCode && File.Exists("Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll"))
+                alltypes.AddRange(Assembly.LoadFile("Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll")
+                    .GetTypes());
+            return alltypes;
+        }
 
-				if (code2FileDic.ContainsKey (type) == false || code2FileDic [type].Contains (guid)) {
-					continue;
-				}
+        public static string StripComment(string code)
+        {
+            code = Regex.Replace(code, "//.*[\\n\\r]", "");
+            code = Regex.Replace(code, "/\\*.*[\\n\\r]\\*/", "");
+            return code;
+        }
 
-				if (string.IsNullOrEmpty (type.Namespace) == false) {
-					var namespacepattern = string.Format ("([namespace|using][\\s]{0}[{{\\s\\r\\n\\r;]|{0}\\.)", type.Namespace);
-					if (Regex.IsMatch (code, namespacepattern) == false) {
-						continue;
-					}
-				}
+        private void CollectionReferenceClasses(string guid, List<Type> types)
+        {
+            var codePath = AssetDatabase.GUIDToAssetPath(guid);
+            if (string.IsNullOrEmpty(codePath) || !File.Exists(codePath)) return;
 
-				string match = string.Empty;
+            var code = StripComment(File.ReadAllText(codePath));
 
-				if (type.IsGenericTypeDefinition) {
-					string typeName = type.GetGenericTypeDefinition ().Name.Split ('`') [0];
-					match = string.Format ("[!|&\\]\\[\\.\\s<(]{0}[\\.\\s\\n\\r>,<(){{]", typeName);
+            List<string> referenceList = null;
+            CollectionData reference = null;
 
-				} else {
-					string typeName = type.Name.Split ('`') [0].Replace ("Attribute", "");
-					match = string.Format ("[!|&\\]\\[\\.\\s<(]{0}[\\.\\s\\n\\r>,<(){{\\]]", typeName);
+            if (!references.Exists(c => c.fileGuid == guid))
+            {
+                referenceList = new List<string>();
+                reference = new CollectionData
+                {
+                    fileGuid = guid,
+                    referenceGids = referenceList
+                };
+                references.Add(reference);
+            }
+            else
+            {
+                reference = references.Find(c => c.fileGuid == guid);
+                referenceList = reference.referenceGids;
+            }
+
+            referenceList.Clear();
+
+            var timestamp = File.GetLastWriteTime(codePath);
+            reference.timeStamp = timestamp;
+
+            foreach (var type in types)
+            {
+                if (!code2FileDic.ContainsKey(type) || code2FileDic[type].Contains(guid)) continue;
+
+                if (!string.IsNullOrEmpty(type.Namespace))
+                {
+                    var namespacepattern = string.Format("([namespace|using][\\s]{0}[{{\\s\\r\\n\\r;]|{0}\\.)",
+                        type.Namespace);
+                    if (!Regex.IsMatch(code, namespacepattern)) continue;
+                }
+
+                var match = string.Empty;
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    var typeName = type.GetGenericTypeDefinition().Name.Split('`')[0];
+                    match = string.Format("[!|&\\]\\[\\.\\s<(]{0}[\\.\\s\\n\\r>,<(){{]", typeName);
+                }
+                else
+                {
+                    var typeName = type.Name.Split('`')[0].Replace("Attribute", "");
+                    match = string.Format("[!|&\\]\\[\\.\\s<(]{0}[\\.\\s\\n\\r>,<(){{\\]]", typeName);
 
 
-					//  check Extension Methods
+                    //  check Extension Methods
 
-					if (Regex.IsMatch (code, string.Format ("this\\s{0}\\s", typeName))) {
-						foreach (var file in code2FileDic[type]) {
-							foreach (var baseReference in references.Where(c=>c.fileGuid == file)) {
-								baseReference.referenceGids.Add (guid);
-							}
-						}
-					}
-				}
-				if (Regex.IsMatch (code, match)) {
-					var typeGuids = code2FileDic [type];
-					foreach (var typeGuid in typeGuids) {
+                    if (Regex.IsMatch(code, string.Format("this\\s{0}\\s", typeName)))
+                        foreach (var file in code2FileDic[type])
+                        foreach (var baseReference in references.Where(c => c.fileGuid == file))
+                            baseReference.referenceGids.Add(guid);
+                }
 
-						if (referenceList.Contains (typeGuid) == false) {
-							referenceList.Add (typeGuid);
-						}
-					}
-				}
-			}
-		}
+                if (Regex.IsMatch(code, match))
+                {
+                    var typeGuids = code2FileDic[type];
+                    foreach (var typeGuid in typeGuids)
+                        if (!referenceList.Contains(typeGuid))
+                            referenceList.Add(typeGuid);
+                }
+            }
+        }
 
-		void CollectionCustomEditorClasses (IEnumerable<System.Type> types)
-		{
-			foreach (var type in types) {
-				
-				if (code2FileDic.ContainsKey (type) == false) {
-					continue;
-				}
+        private void CollectionCustomEditorClasses(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                if (!code2FileDic.ContainsKey(type)) continue;
 
-				var attributes = type.GetCustomAttributes (typeof(CustomEditor), true);
-				foreach (var attribute in attributes) {
-					if (attribute is CustomEditor == false) {
-						continue;
-					}
-					var customEditor = attribute as CustomEditor;
-					var customEditorReferenceTypeField = typeof(CustomEditor).GetField ("m_InspectedType", BindingFlags.Instance | BindingFlags.NonPublic);
-					var customEditorReferenceType = (System.Type)customEditorReferenceTypeField.GetValue (customEditor);
+                var attributes = type.GetCustomAttributes(typeof(CustomEditor), true);
+                foreach (var attribute in attributes)
+                {
+                    if (!(attribute is CustomEditor)) continue;
+                    var customEditor = attribute as CustomEditor;
+                    var customEditorReferenceTypeField = typeof(CustomEditor).GetField("m_InspectedType",
+                        BindingFlags.Instance | BindingFlags.NonPublic);
+                    var customEditorReferenceType = (Type)customEditorReferenceTypeField.GetValue(customEditor);
 
-					if (code2FileDic.ContainsKey (customEditorReferenceType) == false) {
-						continue;
-					}
+                    if (!code2FileDic.ContainsKey(customEditorReferenceType)) continue;
 
-					foreach (var filePath in code2FileDic[customEditorReferenceType]) {
-						if (references.Exists (c => c.fileGuid == filePath) == false) {
-							continue;
-						}
-						foreach (var refs in  references.Where(c=>c.fileGuid == filePath)) {
-							var list = refs.referenceGids;
-							list.AddRange (code2FileDic [type]);
-						}
-					}
-				}
-			}
-		}
-	}
+                    foreach (var filePath in code2FileDic[customEditorReferenceType])
+                    {
+                        if (!references.Exists(c => c.fileGuid == filePath)) continue;
+                        foreach (var refs in references.Where(c => c.fileGuid == filePath))
+                        {
+                            var list = refs.referenceGids;
+                            list.AddRange(code2FileDic[type]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

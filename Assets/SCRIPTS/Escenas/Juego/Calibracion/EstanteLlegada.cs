@@ -1,34 +1,34 @@
+using EscenaDescarga;
 using UnityEngine;
-using System.Collections;
 
-public class EstanteLlegada : ManejoPallets
+namespace Escenas.Juego.Calibracion
 {
+    public class EstanteLlegada : ManejoPallets
+    {
+        public GameObject Mano;
+        public ContrCalibracion ContrCalib;
 
-	public GameObject Mano;
-	public ContrCalibracion ContrCalib;
-	
-	//-----------------------------------------------//
+        //-----------------------------------------------//
 
-	// Use this for initialization
-	void Start () 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
-	
-	//--------------------------------------------------//
-	
-	public override bool Recibir(Pallet p)
-	{
-        p.Portador = this.gameObject;
-        base.Recibir(p);
-        ContrCalib.FinTutorial();
+        // Use this for initialization
+        private void Start()
+        {
+        }
 
-        return true;
+        // Update is called once per frame
+        private void Update()
+        {
+        }
+
+        //--------------------------------------------------//
+
+        public override bool Recibir(Pallet p)
+        {
+            p.Portador = gameObject;
+            base.Recibir(p);
+            ContrCalib.FinTutorial();
+
+            return true;
+        }
     }
 }

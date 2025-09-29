@@ -1,74 +1,72 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PalletMover : ManejoPallets {
-
-    public MoveType miInput;
-    public enum MoveType {
-        WASD,
-        Arrows
-    }
-
-    public ManejoPallets Desde, Hasta;
-    bool segundoCompleto = false;
-
-    private void Update() {
-        switch (miInput) {
-            case MoveType.WASD:
-                if (!Tenencia() && Desde.Tenencia() && Input.GetKeyDown(KeyCode.A)) {
-                    PrimerPaso();
-                }
-                if (Tenencia() && Input.GetKeyDown(KeyCode.S)) {
-                    SegundoPaso();
-                }
-                if (segundoCompleto && Tenencia() && Input.GetKeyDown(KeyCode.D)) {
-                    TercerPaso();
-                }
-                break;
-            case MoveType.Arrows:
-                if (!Tenencia() && Desde.Tenencia() && Input.GetKeyDown(KeyCode.LeftArrow)) {
-                    PrimerPaso();
-                }
-                if (Tenencia() && Input.GetKeyDown(KeyCode.DownArrow)) {
-                    SegundoPaso();
-                }
-                if (segundoCompleto && Tenencia() && Input.GetKeyDown(KeyCode.RightArrow)) {
-                    TercerPaso();
-                }
-                break;
-            default:
-                break;
+namespace EscenaDescarga
+{
+    public class PalletMover : ManejoPallets
+    {
+        public enum MoveType
+        {
+            WASD,
+            Arrows
         }
-    }
 
-    void PrimerPaso() {
-        Desde.Dar(this);
-        segundoCompleto = false;
-    }
-    void SegundoPaso() {
-        base.Pallets[0].transform.position = transform.position;
-        segundoCompleto = true;
-    }
-    void TercerPaso() {
-        Dar(Hasta);
-        segundoCompleto = false;
-    }
+        public MoveType miInput;
 
-    public override void Dar(ManejoPallets receptor) {
-        if (Tenencia()) {
-            if (receptor.Recibir(Pallets[0])) {
-                Pallets.RemoveAt(0);
+        public ManejoPallets Desde, Hasta;
+        private bool segundoCompleto;
+
+        private void Update()
+        {
+            switch (miInput)
+            {
+                case MoveType.WASD:
+                    if (!Tenencia() && Desde.Tenencia() && Input.GetKeyDown(KeyCode.A)) PrimerPaso();
+                    if (Tenencia() && Input.GetKeyDown(KeyCode.S)) SegundoPaso();
+                    if (segundoCompleto && Tenencia() && Input.GetKeyDown(KeyCode.D)) TercerPaso();
+                    break;
+                case MoveType.Arrows:
+                    if (!Tenencia() && Desde.Tenencia() && Input.GetKeyDown(KeyCode.LeftArrow)) PrimerPaso();
+                    if (Tenencia() && Input.GetKeyDown(KeyCode.DownArrow)) SegundoPaso();
+                    if (segundoCompleto && Tenencia() && Input.GetKeyDown(KeyCode.RightArrow)) TercerPaso();
+                    break;
             }
         }
-    }
-    public override bool Recibir(Pallet pallet) {
-        if (!Tenencia()) {
-            pallet.Portador = this.gameObject;
-            base.Recibir(pallet);
-            return true;
+
+        private void PrimerPaso()
+        {
+            Desde.Dar(this);
+            segundoCompleto = false;
         }
-        else
+
+        private void SegundoPaso()
+        {
+            Pallets[0].transform.position = transform.position;
+            segundoCompleto = true;
+        }
+
+        private void TercerPaso()
+        {
+            Dar(Hasta);
+            segundoCompleto = false;
+        }
+
+        public override void Dar(ManejoPallets receptor)
+        {
+            if (Tenencia())
+                if (receptor.Recibir(Pallets[0]))
+                    Pallets.RemoveAt(0);
+        }
+
+        public override bool Recibir(Pallet pallet)
+        {
+            if (!Tenencia())
+            {
+                pallet.Portador = gameObject;
+                base.Recibir(pallet);
+                return true;
+            }
+
             return false;
+        }
     }
 }
