@@ -125,4 +125,24 @@ public class Player : MonoBehaviour
 	}
 	
 	
+	public ContrCalibracion CalibrationController 
+	{ 
+	    get { return ContrCalib; } 
+	}
+	
+	public void SwitchToCalibration()
+	{
+	    CambiarACalibracion();
+	}
+	
+	public void SwitchToDriving()
+	{
+	    CambiarAConduccion();
+	}
+	
+	public ControladorDeDescarga DownloadController 
+	{ 
+	    get { return ContrDesc; } 
+	}
+	
 }

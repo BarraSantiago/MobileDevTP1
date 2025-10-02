@@ -141,19 +141,19 @@ public class ContrCalibracion : MonoBehaviour
         //Reiniciar();
     }
 	
+
 	public void FinTutorial()
 	{
-		EstAct = ContrCalibracion.Estados.Finalizado;
-        palletsMover.enabled = false;
-        GM.FinCalibracion(Pj.IdPlayer);
+	    EstAct = ContrCalibracion.Estados.Finalizado;
+	    palletsMover.enabled = false;
+	    GM.FinCalibracion(Pj.IdPlayer);
 	}
-	
 	void SetActivComp(bool estado)
 	{
-		if(Partida.GetComponent<Renderer>() != null)
+		if(Partida.GetComponent<Renderer>())
 			Partida.GetComponent<Renderer>().enabled = estado;
 		Partida.GetComponent<Collider>().enabled = estado;
-		if(Llegada.GetComponent<Renderer>() != null)
+		if(Llegada.GetComponent<Renderer>())
 			Llegada.GetComponent<Renderer>().enabled = estado;
 		Llegada.GetComponent<Collider>().enabled = estado;
 		P.GetComponent<Renderer>().enabled = estado;
