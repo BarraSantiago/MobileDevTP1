@@ -1,22 +1,21 @@
 using UnityEngine;
+using System.Collections;
 
-namespace Escenas.Juego.Calibracion
+public class CopyMove : MonoBehaviour
 {
-    public class CopyMove : MonoBehaviour
-    {
-        public Transform target;
-        //public float Diferencia = 1;
+	public Transform Target;
+	//public float Diferencia = 1;
 
-        // Use this for initialization
-        private void Start()
-        {
-        }
-
-        // Update is called once per frame
-        private void LateUpdate()
-        {
-            transform.position = target.position; // + Target.transform.right * Diferencia;
-            //transform.localRotation = Target.localRotation;
-        }
-    }
+	// Use this for initialization
+	void Start () 
+	{
+	
+	}
+	
+	// Update is called once per frame
+	void LateUpdate () 
+	{
+		transform.position = Target.position;// + Target.transform.right * Diferencia;
+		//transform.localRotation = Target.localRotation;
+	}
 }

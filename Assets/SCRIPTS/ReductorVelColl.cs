@@ -1,21 +1,26 @@
 using UnityEngine;
+using System.Collections;
 
-public class ReductorVelColl : MonoBehaviour
+public class ReductorVelColl : MonoBehaviour 
 {
-    public float reduccionVel;
-    public string playerTag = "Player";
-    private bool _usado;
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.transform.tag == playerTag)
-            if (!_usado)
-                Chocado();
-        //other.transform.GetComponent<AcelerAuto>().Chocar(this);
-    }
-
-    public virtual void Chocado()
-    {
-        _usado = true;
-    }
+	public float ReduccionVel;
+	bool Usado = false;
+	public string PlayerTag = "Player";
+	
+	void OnCollisionEnter(Collision other) 
+	{
+		if(other.transform.tag == PlayerTag)
+		{
+			if(!Usado)
+			{
+				Chocado();
+				//other.transform.GetComponent<AcelerAuto>().Chocar(this);
+			}
+		}
+	}
+	
+	public virtual void Chocado()
+	{
+		Usado = true;
+	}
 }

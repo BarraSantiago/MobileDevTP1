@@ -1,11 +1,10 @@
-using EscenaDescarga;
-using Escenas.Juego.Calibracion;
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
-///     clase encargada de TODA la visualizacion
-///     de cada player, todo aquello que corresconda a
-///     cada seccion de la pantalla independientemente
+/// clase encargada de TODA la visualizacion
+/// de cada player, todo aquello que corresconda a 
+/// cada seccion de la pantalla independientemente
 /// </summary>
 public class Visualizacion : MonoBehaviour
 {
@@ -15,30 +14,33 @@ public class Visualizacion : MonoBehaviour
         Der
     }
 
-    public Lado ladoAct;
+    public Lado LadoAct;
+
+    ControlDireccion Direccion;
+    Player Pj;
 
     //las distintas camaras
-    public Camera camCalibracion;
-    public Camera camConduccion;
-    public Camera camDescarga;
+    public Camera CamCalibracion;
+    public Camera CamConduccion;
+    public Camera CamDescarga;
 
 
     //EL DINERO QUE SE TIENE
-    public Vector2[] dinPos;
-    public Vector2 dinEsc = Vector2.zero;
+    public Vector2[] DinPos;
+    public Vector2 DinEsc = Vector2.zero;
 
-    public GUISkin gsDin;
+    public GUISkin GS_Din;
 
     //EL VOLANTE
-    public Vector2[] volantePos;
-    public float volanteEsc;
+    public Vector2[] VolantePos;
+    public float VolanteEsc = 0;
 
-    public GUISkin gsVolante;
+    public GUISkin GS_Volante;
 
 
     //PARA EL INVENTARIO
-    public Vector2[] fondoPos;
-    public Vector2 fondoEsc = Vector2.zero;
+    public Vector2[] FondoPos;
+    public Vector2 FondoEsc = Vector2.zero;
 
     //public Vector2 SlotsEsc = Vector2.zero;
     //public Vector2 SlotPrimPos = Vector2.zero;
@@ -47,74 +49,71 @@ public class Visualizacion : MonoBehaviour
     //public int Fil = 0;
     //public int Col = 0;
 
-    public Texture2D texturaVacia; //lo que aparece si no hay ninguna bolsa
-    public Texture2D textFondo;
+    public Texture2D TexturaVacia; //lo que aparece si no hay ninguna bolsa
+    public Texture2D TextFondo;
 
-    public float parpadeo = 0.8f;
-    public float tempParp;
-    public bool primIma = true;
+    public float Parpadeo = 0.8f;
+    public float TempParp = 0;
+    public bool PrimIma = true;
 
-    public Texture2D[] textInvIzq;
-    public Texture2D[] textInvDer;
+    public Texture2D[] TextInvIzq;
+    public Texture2D[] TextInvDer;
 
-    public GUISkin gsInv;
+    public GUISkin GS_Inv;
 
     //BONO DE DESCARGA
-    public Vector2 bonusPos = Vector2.zero;
-    public Vector2 bonusEsc = Vector2.zero;
+    public Vector2 BonusPos = Vector2.zero;
+    public Vector2 BonusEsc = Vector2.zero;
 
-    public Color32 colorFondoBolsa;
-    public Vector2 colorFondoPos = Vector2.zero;
-    public Vector2 colorFondoEsc = Vector2.zero;
+    public Color32 ColorFondoBolsa;
+    public Vector2 ColorFondoPos = Vector2.zero;
+    public Vector2 ColorFondoEsc = Vector2.zero;
 
-    public Vector2 colorFondoFondoPos = Vector2.zero;
-    public Vector2 colorFondoFondoEsc = Vector2.zero;
+    public Vector2 ColorFondoFondoPos = Vector2.zero;
+    public Vector2 ColorFondoFondoEsc = Vector2.zero;
 
-    public GUISkin gsFondoBonusColor;
-    public GUISkin gsFondoFondoBonusColor;
-    public GUISkin gsBonus;
+    public GUISkin GS_FondoBonusColor;
+    public GUISkin GS_FondoFondoBonusColor;
+    public GUISkin GS_Bonus;
 
 
     //CALIBRACION MAS TUTO BASICO
-    public Vector2 readyPos = Vector2.zero;
-    public Vector2 readyEsc = Vector2.zero;
-    public Texture2D[] imagenesDelTuto;
-    public float intervalo = 0.8f; //tiempo de cada cuanto cambia de imagen
-    public Texture2D imaEnPosicion;
-    public Texture2D imaReady;
-    public GUISkin gsTutoCalib;
+    public Vector2 ReadyPos = Vector2.zero;
+    public Vector2 ReadyEsc = Vector2.zero;
+    public Texture2D[] ImagenesDelTuto;
+    public float Intervalo = 0.8f; //tiempo de cada cuanto cambia de imagen
+    float TempoIntTuto = 0;
+    int EnCurso = -1;
+    public Texture2D ImaEnPosicion;
+    public Texture2D ImaReady;
+    public GUISkin GS_TutoCalib;
 
     //NUMERO DEL JUGADOR
-    public Texture2D textNum1;
-    public Texture2D textNum2;
-    public GameObject techo;
-
-    private ControlDireccion _direccion;
-    private int _enCurso = -1;
-    private Player _pj;
+    public Texture2D TextNum1;
+    public Texture2D TextNum2;
+    public GameObject Techo;
 
 
-    private Rect _r;
-    private float _tempoIntTuto;
+    Rect R;
 
     //------------------------------------------------------------------//
 
     // Use this for initialization
-    private void Start()
+    void Start()
     {
-        _tempoIntTuto = intervalo;
-        _direccion = GetComponent<ControlDireccion>();
-        _pj = GetComponent<Player>();
+        TempoIntTuto = Intervalo;
+        Direccion = GetComponent<ControlDireccion>();
+        Pj = GetComponent<Player>();
     }
 
     // Update is called once per frame
-    private void Update()
+    void Update()
     {
     }
 
-    private void OnGUI()
+    void OnGUI()
     {
-        switch (_pj.estAct)
+        switch (Pj.EstAct)
         {
             case Player.Estados.EnConduccion:
                 //inventario
@@ -155,183 +154,186 @@ public class Visualizacion : MonoBehaviour
 
     public void CambiarACalibracion()
     {
-        camCalibracion.enabled = true;
-        camConduccion.enabled = false;
-        camDescarga.enabled = false;
+        CamCalibracion.enabled = true;
+        CamConduccion.enabled = false;
+        CamDescarga.enabled = false;
     }
 
     public void CambiarATutorial()
     {
-        camCalibracion.enabled = false;
-        camConduccion.enabled = true;
-        camDescarga.enabled = false;
+        CamCalibracion.enabled = false;
+        CamConduccion.enabled = true;
+        CamDescarga.enabled = false;
     }
 
     public void CambiarAConduccion()
     {
-        camCalibracion.enabled = false;
-        camConduccion.enabled = true;
-        camDescarga.enabled = false;
+        CamCalibracion.enabled = false;
+        CamConduccion.enabled = true;
+        CamDescarga.enabled = false;
     }
 
     public void CambiarADescarga()
     {
-        camCalibracion.enabled = false;
-        camConduccion.enabled = false;
-        camDescarga.enabled = true;
+        CamCalibracion.enabled = false;
+        CamConduccion.enabled = false;
+        CamDescarga.enabled = true;
     }
 
     //---------//
 
-    public void SetLado(Lado lado)
+    public void SetLado(GameManager.VisualizationSide lado)
     {
-        ladoAct = lado;
+        // Convert GameManager.VisualizationSide to local Lado enum
+        LadoAct = lado == GameManager.VisualizationSide.Left ? Lado.Izq : Lado.Der;
 
         Rect r = new Rect();
-        r.width = camConduccion.rect.width;
-        r.height = camConduccion.rect.height;
-        r.y = camConduccion.rect.y;
+        r.width = CamConduccion.rect.width;
+        r.height = CamConduccion.rect.height;
+        r.y = CamConduccion.rect.y;
 
-        switch (lado)
+        switch (LadoAct)
         {
             case Lado.Der:
                 r.x = 0.5f;
                 break;
-
-
             case Lado.Izq:
                 r.x = 0;
                 break;
         }
 
-        camCalibracion.rect = r;
-        camConduccion.rect = r;
-        camDescarga.rect = r;
+        CamCalibracion.rect = r;
+        CamConduccion.rect = r;
+        CamDescarga.rect = r;
 
-        if (ladoAct == Lado.Izq)
-            techo.GetComponent<Renderer>().material.mainTexture = textNum1;
-        else
-            techo.GetComponent<Renderer>().material.mainTexture = textNum2;
-    }
-
-    private void SetBonus()
-    {
-        if (_pj.contrDesc.pEnMov != null)
+        if (LadoAct == Visualizacion.Lado.Izq)
         {
-            //el fondo
-            GUI.skin = gsFondoFondoBonusColor;
-
-            _r.width = colorFondoFondoEsc.x * Screen.width / 100;
-            _r.height = colorFondoFondoEsc.y * Screen.height / 100;
-            _r.x = colorFondoFondoPos.x * Screen.width / 100;
-            _r.y = colorFondoFondoPos.y * Screen.height / 100;
-            if (ladoAct == Lado.Der)
-                _r.x += Screen.width / 2;
-            GUI.Box(_r, "");
-
-
-            //el fondo
-            GUI.skin = gsFondoBonusColor;
-
-            _r.width = colorFondoEsc.x * Screen.width / 100;
-            _r.height = colorFondoEsc.y * Screen.height / 100 * (_pj.contrDesc.bonus / (int)Pallet.Valores.Valor2);
-            _r.x = colorFondoPos.x * Screen.width / 100;
-            _r.y = colorFondoPos.y * Screen.height / 100 - _r.height;
-            if (ladoAct == Lado.Der)
-                _r.x += Screen.width / 2;
-            GUI.Box(_r, "");
-
-
-            //la bolsa
-            GUI.skin = gsBonus;
-
-            _r.width = bonusEsc.x * Screen.width / 100;
-            _r.height = _r.width / 2;
-            _r.x = bonusPos.x * Screen.width / 100;
-            _r.y = bonusPos.y * Screen.height / 100;
-            if (ladoAct == Lado.Der)
-                _r.x += Screen.width / 2;
-            GUI.Box(_r, "     $" + _pj.contrDesc.bonus.ToString("0"));
+            Techo.GetComponent<Renderer>().material.mainTexture = TextNum1;
+        }
+        else
+        {
+            Techo.GetComponent<Renderer>().material.mainTexture = TextNum2;
         }
     }
 
-    private void SetDinero()
+    void SetBonus()
     {
-        GUI.skin = gsDin;
+        if (Pj.ContrDesc.PEnMov != null)
+        {
+            //el fondo
+            GUI.skin = GS_FondoFondoBonusColor;
 
-        _r.width = dinEsc.x * Screen.width / 100;
-        _r.height = dinEsc.y * Screen.height / 100;
-        _r.x = dinPos[0].x * Screen.width / 100;
-        _r.y = dinPos[0].y * Screen.height / 100;
-        if (ladoAct == Lado.Der)
-            _r.x = dinPos[1].x * Screen.width / 100;
-        //R.x = (Screen.width) - (Screen.width/2) - R.x;
-        GUI.Box(_r, "$" + PrepararNumeros(_pj.dinero));
+            R.width = ColorFondoFondoEsc.x * Screen.width / 100;
+            R.height = ColorFondoFondoEsc.y * Screen.height / 100;
+            R.x = ColorFondoFondoPos.x * Screen.width / 100;
+            R.y = ColorFondoFondoPos.y * Screen.height / 100;
+            if (LadoAct == Visualizacion.Lado.Der)
+                R.x += (Screen.width) / 2;
+            GUI.Box(R, "");
+
+
+            //el fondo
+            GUI.skin = GS_FondoBonusColor;
+
+            R.width = ColorFondoEsc.x * Screen.width / 100;
+            R.height = (ColorFondoEsc.y * Screen.height / 100) * (Pj.ContrDesc.Bonus / (int)Pallet.Valores.Valor2);
+            R.x = ColorFondoPos.x * Screen.width / 100;
+            R.y = (ColorFondoPos.y * Screen.height / 100) - R.height;
+            if (LadoAct == Visualizacion.Lado.Der)
+                R.x += (Screen.width) / 2;
+            GUI.Box(R, "");
+
+
+            //la bolsa
+            GUI.skin = GS_Bonus;
+
+            R.width = BonusEsc.x * Screen.width / 100;
+            R.height = R.width / 2;
+            R.x = BonusPos.x * Screen.width / 100;
+            R.y = BonusPos.y * Screen.height / 100;
+            if (LadoAct == Visualizacion.Lado.Der)
+                R.x += (Screen.width) / 2;
+            GUI.Box(R, "     $" + Pj.ContrDesc.Bonus.ToString("0"));
+        }
     }
 
-    private void SetCalibr()
+    void SetDinero()
     {
-        GUI.skin = gsTutoCalib;
+        GUI.skin = GS_Din;
 
-        _r.width = readyEsc.x * Screen.width / 100;
-        _r.height = readyEsc.y * Screen.height / 100;
-        _r.x = readyPos.x * Screen.width / 100;
-        _r.y = readyPos.y * Screen.height / 100;
-        if (ladoAct == Lado.Der)
-            _r.x = Screen.width - _r.x - _r.width;
+        R.width = DinEsc.x * Screen.width / 100;
+        R.height = DinEsc.y * Screen.height / 100;
+        R.x = DinPos[0].x * Screen.width / 100;
+        R.y = DinPos[0].y * Screen.height / 100;
+        if (LadoAct == Visualizacion.Lado.Der)
+            R.x = DinPos[1].x * Screen.width / 100;
+        //R.x = (Screen.width) - (Screen.width/2) - R.x;
+        GUI.Box(R, "$" + PrepararNumeros(Pj.Dinero));
+    }
 
-        switch (_pj.contrCalib.estAct)
+    void SetCalibr()
+    {
+        GUI.skin = GS_TutoCalib;
+
+        R.width = ReadyEsc.x * Screen.width / 100;
+        R.height = ReadyEsc.y * Screen.height / 100;
+        R.x = ReadyPos.x * Screen.width / 100;
+        R.y = ReadyPos.y * Screen.height / 100;
+        if (LadoAct == Visualizacion.Lado.Der)
+            R.x = (Screen.width) - R.x - R.width;
+
+        switch (Pj.ContrCalib.EstAct)
         {
             case ContrCalibracion.Estados.Calibrando:
 
                 //pongase en posicion para iniciar
-                gsTutoCalib.box.normal.background = imaEnPosicion;
-                GUI.Box(_r, "");
+                GS_TutoCalib.box.normal.background = ImaEnPosicion;
+                GUI.Box(R, "");
 
                 break;
 
             case ContrCalibracion.Estados.Tutorial:
                 //tome la bolsa y depositela en el estante
 
-                _tempoIntTuto += T.GetDT();
-                if (_tempoIntTuto >= intervalo)
+                TempoIntTuto += T.GetDT();
+                if (TempoIntTuto >= Intervalo)
                 {
-                    _tempoIntTuto = 0;
-                    if (_enCurso + 1 < imagenesDelTuto.Length)
-                        _enCurso++;
+                    TempoIntTuto = 0;
+                    if (EnCurso + 1 < ImagenesDelTuto.Length)
+                        EnCurso++;
                     else
-                        _enCurso = 0;
+                        EnCurso = 0;
                 }
 
-                gsTutoCalib.box.normal.background = imagenesDelTuto[_enCurso];
+                GS_TutoCalib.box.normal.background = ImagenesDelTuto[EnCurso];
 
-                GUI.Box(_r, "");
+                GUI.Box(R, "");
 
                 break;
 
             case ContrCalibracion.Estados.Finalizado:
                 //esperando al otro jugador		
-                gsTutoCalib.box.normal.background = imaReady;
-                GUI.Box(_r, "");
+                GS_TutoCalib.box.normal.background = ImaReady;
+                GUI.Box(R, "");
 
                 break;
         }
     }
 
-    private void SetTuto()
+    void SetTuto()
     {
-        if (_pj.contrTuto.finalizado)
+        if (Pj.ContrTuto.Finalizado)
         {
-            GUI.skin = gsTutoCalib;
+            GUI.skin = GS_TutoCalib;
 
-            _r.width = readyEsc.x * Screen.width / 100;
-            _r.height = readyEsc.y * Screen.height / 100;
-            _r.x = readyPos.x * Screen.width / 100;
-            _r.y = readyPos.y * Screen.height / 100;
-            if (ladoAct == Lado.Der)
-                _r.x = Screen.width - _r.x - _r.width;
+            R.width = ReadyEsc.x * Screen.width / 100;
+            R.height = ReadyEsc.y * Screen.height / 100;
+            R.x = ReadyPos.x * Screen.width / 100;
+            R.y = ReadyPos.y * Screen.height / 100;
+            if (LadoAct == Visualizacion.Lado.Der)
+                R.x = (Screen.width) - R.x - R.width;
 
-            GUI.Box(_r, "ESPERANDO AL OTRO JUGADOR");
+            GUI.Box(R, "ESPERANDO AL OTRO JUGADOR");
         }
     }
 
@@ -382,128 +384,136 @@ public class Visualizacion : MonoBehaviour
     }
     */
 
-    private void SetVolante()
+    void SetVolante()
     {
-        GUI.skin = gsVolante;
+        GUI.skin = GS_Volante;
 
-        _r.width = volanteEsc * Screen.width / 100;
-        _r.height = volanteEsc * Screen.width / 100;
-        _r.x = volantePos[0].x * Screen.width / 100;
-        _r.y = volantePos[0].y * Screen.height / 100;
+        R.width = VolanteEsc * Screen.width / 100;
+        R.height = VolanteEsc * Screen.width / 100;
+        R.x = VolantePos[0].x * Screen.width / 100;
+        R.y = VolantePos[0].y * Screen.height / 100;
 
-        if (ladoAct == Lado.Der)
-            _r.x = volantePos[1].x * Screen.width / 100;
+        if (LadoAct == Visualizacion.Lado.Der)
+            R.x = VolantePos[1].x * Screen.width / 100;
         //R.x = (Screen.width) - ((Screen.width/2) - R.x);
 
         Vector2 centro;
-        centro.x = _r.x + _r.width / 2;
-        centro.y = _r.y + _r.height / 2;
-        float angulo = 100 * _direccion.GetGiro();
+        centro.x = R.x + R.width / 2;
+        centro.y = R.y + R.height / 2;
+        float angulo = 100 * Direccion.GetGiro();
 
         GUIUtility.RotateAroundPivot(angulo, centro);
 
-        GUI.Box(_r, "");
+        GUI.Box(R, "");
 
-        GUIUtility.RotateAroundPivot(angulo * -1, centro);
+        GUIUtility.RotateAroundPivot(angulo * (-1), centro);
     }
 
-    private void SetInv2()
+    void SetInv2()
     {
-        GUI.skin = gsInv;
+        GUI.skin = GS_Inv;
 
-        _r.width = fondoEsc.x * Screen.width / 100;
-        _r.height = fondoEsc.y * Screen.width / 100;
-        _r.x = fondoPos[0].x * Screen.width / 100;
-        _r.y = fondoPos[0].y * Screen.height / 100;
+        R.width = FondoEsc.x * Screen.width / 100;
+        R.height = FondoEsc.y * Screen.width / 100;
+        R.x = FondoPos[0].x * Screen.width / 100;
+        R.y = FondoPos[0].y * Screen.height / 100;
 
         int contador = 0;
         for (int i = 0; i < 3; i++)
-            if (_pj.bolasas[i] != null)
+        {
+            if (Pj.Bolasas[i] != null)
                 contador++;
+        }
 
-        if (ladoAct == Lado.Der)
+        if (LadoAct == Visualizacion.Lado.Der)
         {
             //R.x = (Screen.width) - R.x - R.width;
-            _r.x = fondoPos[1].x * Screen.width / 100;
-            gsInv.box.normal.background = textInvDer[contador];
+            R.x = FondoPos[1].x * Screen.width / 100;
+            GS_Inv.box.normal.background = TextInvDer[contador];
         }
         else
         {
-            gsInv.box.normal.background = textInvIzq[contador];
+            GS_Inv.box.normal.background = TextInvIzq[contador];
         }
 
-        GUI.Box(_r, "");
+        GUI.Box(R, "");
     }
 
-    private void SetInv3()
+    void SetInv3()
     {
-        GUI.skin = gsInv;
+        GUI.skin = GS_Inv;
 
-        _r.width = fondoEsc.x * Screen.width / 100;
-        _r.height = fondoEsc.y * Screen.width / 100;
-        _r.x = fondoPos[0].x * Screen.width / 100;
-        _r.y = fondoPos[0].y * Screen.height / 100;
+        R.width = FondoEsc.x * Screen.width / 100;
+        R.height = FondoEsc.y * Screen.width / 100;
+        R.x = FondoPos[0].x * Screen.width / 100;
+        R.y = FondoPos[0].y * Screen.height / 100;
 
         int contador = 0;
         for (int i = 0; i < 3; i++)
-            if (_pj.bolasas[i] != null)
+        {
+            if (Pj.Bolasas[i] != null)
                 contador++;
+        }
 
-        if (ladoAct == Lado.Der)
+        if (LadoAct == Visualizacion.Lado.Der)
         {
             //R.x = (Screen.width) - (Screen.width/2) - R.x;
-            _r.x = fondoPos[1].x * Screen.width / 100;
+            R.x = FondoPos[1].x * Screen.width / 100;
 
             if (contador < 3)
-            {
-                gsInv.box.normal.background = textInvDer[contador];
-            }
+                GS_Inv.box.normal.background = TextInvDer[contador];
             else
             {
-                tempParp += T.GetDT();
+                TempParp += T.GetDT();
 
-                if (tempParp >= parpadeo)
+                if (TempParp >= Parpadeo)
                 {
-                    tempParp = 0;
-                    if (primIma)
-                        primIma = false;
+                    TempParp = 0;
+                    if (PrimIma)
+                        PrimIma = false;
                     else
-                        primIma = true;
+                        PrimIma = true;
                 }
 
-                if (primIma)
-                    gsInv.box.normal.background = textInvDer[3];
+                if (PrimIma)
+                {
+                    GS_Inv.box.normal.background = TextInvDer[3];
+                }
                 else
-                    gsInv.box.normal.background = textInvDer[4];
+                {
+                    GS_Inv.box.normal.background = TextInvDer[4];
+                }
             }
         }
         else
         {
             if (contador < 3)
-            {
-                gsInv.box.normal.background = textInvIzq[contador];
-            }
+                GS_Inv.box.normal.background = TextInvIzq[contador];
             else
             {
-                tempParp += T.GetDT();
+                TempParp += T.GetDT();
 
-                if (tempParp >= parpadeo)
+                if (TempParp >= Parpadeo)
                 {
-                    tempParp = 0;
-                    if (primIma)
-                        primIma = false;
+                    TempParp = 0;
+                    if (PrimIma)
+                        PrimIma = false;
                     else
-                        primIma = true;
+                        PrimIma = true;
                 }
 
-                if (primIma)
-                    gsInv.box.normal.background = textInvIzq[3];
+                if (PrimIma)
+                {
+                    GS_Inv.box.normal.background = TextInvIzq[3];
+                }
                 else
-                    gsInv.box.normal.background = textInvIzq[4];
+                {
+                    GS_Inv.box.normal.background = TextInvIzq[4];
+                }
             }
         }
 
-        GUI.Box(_r, "");
+        GUI.Box(R, "");
     }
 
     public string PrepararNumeros(int dinero)
@@ -512,21 +522,33 @@ public class Visualizacion : MonoBehaviour
         string res = "";
 
         if (dinero < 1) //sin ditero
+        {
             res = "";
+        }
         else if (strDinero.Length == 6) //cientos de miles
+        {
             for (int i = 0; i < strDinero.Length; i++)
             {
                 res += strDinero[i];
 
-                if (i == 2) res += ".";
+                if (i == 2)
+                {
+                    res += ".";
+                }
             }
+        }
         else if (strDinero.Length == 7) //millones
+        {
             for (int i = 0; i < strDinero.Length; i++)
             {
                 res += strDinero[i];
 
-                if (i == 0 || i == 3) res += ".";
+                if (i == 0 || i == 3)
+                {
+                    res += ".";
+                }
             }
+        }
 
         return res;
     }

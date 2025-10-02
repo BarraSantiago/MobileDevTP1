@@ -1,36 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour
-{
-    public List<WheelCollider> throttleWheels = new();
-    public List<WheelCollider> steeringWheels = new();
+public class CarController : MonoBehaviour {
+
+    public List<WheelCollider> throttleWheels = new List<WheelCollider>();
+    public List<WheelCollider> steeringWheels = new List<WheelCollider>();
     public float throttleCoefficient = 20000f;
     public float maxTurn = 20f;
-    private float _acel = 1f;
-    private float _giro;
+    float giro = 0f;
+    float acel = 1f;
 
     // Use this for initialization
-    private void Start()
-    {
+    void Start () {
+		
+	}
+
+	
+	// Update is called once per frame
+	void FixedUpdate () {
+        foreach (WheelCollider wheel in throttleWheels) {
+            wheel.motorTorque = throttleCoefficient * T.GetFDT() * acel;
+        }
+        foreach (WheelCollider wheel in steeringWheels) {
+            wheel.steerAngle = maxTurn * giro;
+        }
+        giro = 0f;
     }
 
-
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-        foreach (WheelCollider wheel in throttleWheels) wheel.motorTorque = throttleCoefficient * T.GetFdt() * _acel;
-        foreach (WheelCollider wheel in steeringWheels) wheel.steerAngle = maxTurn * _giro;
-        _giro = 0f;
+    public void SetGiro(float giro) {
+        this.giro = giro;
     }
-
-    public void SetGiro(float giro)
-    {
-        this._giro = giro;
-    }
-
-    public void SetAcel(float val)
-    {
-        _acel = val;
+    public void SetAcel(float val) {
+        acel = val;
     }
 }

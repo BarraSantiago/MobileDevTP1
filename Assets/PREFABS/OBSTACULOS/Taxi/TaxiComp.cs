@@ -1,200 +1,198 @@
 using UnityEngine;
+using System.Collections;
 
-namespace Prefabs.OBSTACULOS.Taxi
+/// <summary>
+/// basicamente lo que hace es que viaja en linea recta y ocacionalmente gira para un cosatado
+/// previamente verificado, tambien cuando llega al final del recorrido se reinicia en la pos. orig.
+/// </summary>
+public class TaxiComp : MonoBehaviour 
 {
-	/// <summary>
-	/// basicamente lo que hace es que viaja en linea recta y ocacionalmente gira para un cosatado
-	/// previamente verificado, tambien cuando llega al final del recorrido se reinicia en la pos. orig.
-	/// </summary>
-	public class TaxiComp : MonoBehaviour 
-	{
-		public string finTaxiTag = "FinTaxi";
-		public string limiteTag = "Terreno";
+	public string FinTaxiTag = "FinTaxi";
+	public string LimiteTag = "Terreno";
 	
-		public float vel = 0;
+	public float Vel = 0;
 	
-		public Vector2 tiempCadaCuantoDoblaMaxMin = Vector2.zero;
+	public Vector2 TiempCadaCuantoDobla_MaxMin = Vector2.zero;
 	
-		public float duracionGiro = 0;
-		float _tempoDurGir = 0;
+	public float DuracionGiro = 0;
+	float TempoDurGir = 0;
 	
-		public float alcanceVerif = 0;
+	public float AlcanceVerif = 0;
 	
-		public string tagTerreno = "";
+	public string TagTerreno = "";
 	
-		public bool girando = false;
-		Vector3 _rotIni;//pasa saber como volver a su posicion original
-		Vector3 _posIni;//para saber donde reiniciar al taxi
+	public bool Girando = false;
+	Vector3 RotIni;//pasa saber como volver a su posicion original
+	Vector3 PosIni;//para saber donde reiniciar al taxi
 	
-		float _tiempEntreGiro = 0;
-		float _tempoEntreGiro = 0;
+	float TiempEntreGiro = 0;
+	float TempoEntreGiro = 0;
 	
-		public float angDeGiro = 30;
-		float _tiempPGiro = 1;//1 es el tiempo que tarda en llegar al otro quaternion
+	public float AngDeGiro = 30;
+	float TiempPGiro = 1;//1 es el tiempo que tarda en llegar al otro quaternion
 	
-		RaycastHit _rh;
+	RaycastHit RH;
 	
-		bool _respawneando = false;
+	bool Respawneando = false;
 	
 	
-		enum Lado{Der, Izq}
+	enum Lado{Der, Izq}
 	
-		//-----------------------------------------------------------------//
+	//-----------------------------------------------------------------//
 
-		// Use this for initialization
-		void Start () 
-		{
-			_tiempEntreGiro = (float) Random.Range(tiempCadaCuantoDoblaMaxMin.x, tiempCadaCuantoDoblaMaxMin.y);
-			_rotIni = this.transform.localEulerAngles;
-			_posIni = transform.position;
-		}
+	// Use this for initialization
+	void Start () 
+	{
+		TiempEntreGiro = (float) Random.Range(TiempCadaCuantoDobla_MaxMin.x, TiempCadaCuantoDobla_MaxMin.y);
+		RotIni = this.transform.localEulerAngles;
+		PosIni = transform.position;
+	}
 	
-		// Update is called once per frame
-		void Update () 
-		{
+	// Update is called once per frame
+	void Update () 
+	{
 		
-			if(_respawneando)
+		if(Respawneando)
+		{
+			if(Medicion())
+				Respawn();
+		}
+		else
+		{
+			if(Girando)
 			{
-				if(Medicion())
-					Respawn();
+				TempoDurGir += Time.deltaTime;
+				if(TempoDurGir > DuracionGiro)
+				{
+					TempoDurGir = 0;
+					DejarDoblar();
+				}
 			}
 			else
 			{
-				if(girando)
+				TempoEntreGiro += Time.deltaTime;
+				if(TempoEntreGiro > TiempEntreGiro)
 				{
-					_tempoDurGir += Time.deltaTime;
-					if(_tempoDurGir > duracionGiro)
-					{
-						_tempoDurGir = 0;
-						DejarDoblar();
-					}
-				}
-				else
-				{
-					_tempoEntreGiro += Time.deltaTime;
-					if(_tempoEntreGiro > _tiempEntreGiro)
-					{
-						_tempoEntreGiro = 0;
-						Doblar();
-					}
+					TempoEntreGiro = 0;
+					Doblar();
 				}
 			}
-		
-		
-		} 
-	
-		void OnTriggerEnter(Collider coll)
-		{
-			if(coll.tag == finTaxiTag)
-			{
-				transform.position = _posIni;
-				transform.localEulerAngles = _rotIni;
-			}		
 		}
+		
+		
+	} 
 	
-		void OnCollisionEnter(Collision coll)
+	void OnTriggerEnter(Collider coll)
+	{
+		if(coll.tag == FinTaxiTag)
 		{
-			if(coll.transform.tag == limiteTag)
+			transform.position = PosIni;
+			transform.localEulerAngles = RotIni;
+		}		
+	}
+	
+	void OnCollisionEnter(Collision coll)
+	{
+		if(coll.transform.tag == LimiteTag)
+		{
+			Respawneando = true;
+		}
+	}
+	
+	void FixedUpdate () 
+	{
+		this.transform.position += transform.forward * Time.fixedDeltaTime * Vel;
+	}
+	
+	//--------------------------------------------------------------------//
+	
+	bool VerificarCostado(Lado lado)
+	{
+		switch (lado)
+		{
+		case Lado.Der:
+			if(Physics.Raycast(transform.position, transform.right, out RH, AlcanceVerif))
 			{
-				_respawneando = true;
+				if(RH.transform.tag == TagTerreno)
+				{
+					return false;
+				}
 			}
-		}
-	
-		void FixedUpdate () 
-		{
-			this.transform.position += transform.forward * Time.fixedDeltaTime * vel;
-		}
-	
-		//--------------------------------------------------------------------//
-	
-		bool VerificarCostado(Lado lado)
-		{
-			switch (lado)
-			{
-				case Lado.Der:
-					if(Physics.Raycast(transform.position, transform.right, out _rh, alcanceVerif))
-					{
-						if(_rh.transform.tag == tagTerreno)
-						{
-							return false;
-						}
-					}
-					break;
+			break;
 			
-				case Lado.Izq:
-					if(Physics.Raycast(transform.position, transform.right * (-1), out _rh, alcanceVerif))
-					{
-						if(_rh.transform.tag == tagTerreno)
-						{
-							return false;
-						}
-					}
-					break;
+		case Lado.Izq:
+			if(Physics.Raycast(transform.position, transform.right * (-1), out RH, AlcanceVerif))
+			{
+				if(RH.transform.tag == TagTerreno)
+				{
+					return false;
+				}
 			}
+			break;
+		}
 		
-			return true;
-		}	
+		return true;
+	}	
 	
-		void Doblar()
+	void Doblar()
+	{
+		Girando = true;
+		//escoje un lado
+		Lado lado;
+		if((int)Random.Range(0,2) == 0)
 		{
-			girando = true;
-			//escoje un lado
-			Lado lado;
-			if((int)Random.Range(0,2) == 0)
-			{
-				lado = TaxiComp.Lado.Izq;
-				//verifica, si no da cambia a derecha
-				if(!VerificarCostado(lado))
-					lado = TaxiComp.Lado.Der;
-			}
-			else
-			{
+			lado = TaxiComp.Lado.Izq;
+			//verifica, si no da cambia a derecha
+			if(!VerificarCostado(lado))
 				lado = TaxiComp.Lado.Der;
-				//verifica, si no da cambia a izq
-				if(!VerificarCostado(lado))
-					lado = TaxiComp.Lado.Izq;
-			}
-		
-		
-			if(lado == TaxiComp.Lado.Der)
-			{
-				Vector3 vaux = transform.localEulerAngles;
-				vaux.y += angDeGiro;
-				transform.localEulerAngles = vaux;
-			}
-			else
-			{
-				Vector3 vaux = transform.localEulerAngles;
-				vaux.y -= angDeGiro;
-				transform.localEulerAngles = vaux;
-			}
 		}
-	
-		void DejarDoblar()
+		else
 		{
-			girando = false;
-			_tiempEntreGiro = (float) Random.Range(tiempCadaCuantoDoblaMaxMin.x, tiempCadaCuantoDoblaMaxMin.y);
-		
-			transform.localEulerAngles = _rotIni;
+			lado = TaxiComp.Lado.Der;
+			//verifica, si no da cambia a izq
+			if(!VerificarCostado(lado))
+				lado = TaxiComp.Lado.Izq;
 		}
-	
-		void Respawn()
+		
+		
+		if(lado == TaxiComp.Lado.Der)
 		{
-			_respawneando = false;
-		
-			transform.position = _posIni;
-			transform.localEulerAngles = _rotIni;
+			Vector3 vaux = transform.localEulerAngles;
+			vaux.y += AngDeGiro;
+			transform.localEulerAngles = vaux;
 		}
-	
-		bool Medicion()
+		else
 		{
-			float dist1 = (GameManager.Instancia.player1.transform.position - _posIni).magnitude;
-			float dist2 = (GameManager.Instancia.player2.transform.position - _posIni).magnitude;
-		
-			if(dist1 > 4 && dist2 > 4)
-				return true;
-			else
-				return false;
+			Vector3 vaux = transform.localEulerAngles;
+			vaux.y -= AngDeGiro;
+			transform.localEulerAngles = vaux;
 		}
+	}
+	
+	void DejarDoblar()
+	{
+		Girando = false;
+		TiempEntreGiro = (float) Random.Range(TiempCadaCuantoDobla_MaxMin.x, TiempCadaCuantoDobla_MaxMin.y);
+		
+		transform.localEulerAngles = RotIni;
+	}
+	
+	void Respawn()
+	{
+		Respawneando = false;
+		
+		transform.position = PosIni;
+		transform.localEulerAngles = RotIni;
+	}
+	
+	bool Medicion()
+	{
+		float dist1 = (GameManager.Instancia.Jugador1.transform.position - PosIni).magnitude;
+		float dist2 = (GameManager.Instancia.Jugador2.transform.position - PosIni).magnitude;
+		
+		if(dist1 > 4 && dist2 > 4)
+			return true;
+		else
+			return false;
 	}
 }

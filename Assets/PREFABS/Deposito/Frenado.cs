@@ -1,103 +1,101 @@
 using UnityEngine;
+using System.Collections;
 
-namespace Prefabs.Deposito
+public class Frenado : MonoBehaviour 
 {
-	public class Frenado : MonoBehaviour 
+	public float VelEntrada = 0;
+	public string TagDeposito = "Deposito";
+	
+	ControlDireccion KInput;
+	
+	
+	float DagMax = 15f;
+	float DagIni = 1f;
+	int Contador = 0;
+	int CantMensajes = 10;
+	float TiempFrenado = 0.5f;
+	float Tempo = 0f;
+	
+	Vector3 Destino;
+	
+	public bool Frenando = false;
+	bool ReduciendoVel = false;
+	
+	//-----------------------------------------------------//
+	
+	// Use this for initialization
+	void Start () 
 	{
-		public float velEntrada = 0;
-		public string tagDeposito = "Deposito";
+		//RestaurarVel();
+		Frenar();
+	}
 	
-		ControlDireccion _kInput;
+	// Update is called once per frame
+	void Update () 
+	{
 	
+	}
 	
-		float _dagMax = 15f;
-		float _dagIni = 1f;
-		int _contador = 0;
-		int _cantMensajes = 10;
-		float _tiempFrenado = 0.5f;
-		float _tempo = 0f;
-	
-		Vector3 _destino;
-	
-		public bool frenando = false;
-		bool _reduciendoVel = false;
-	
-		//-----------------------------------------------------//
-	
-		// Use this for initialization
-		void Start () 
+	void FixedUpdate ()
+	{
+		if(Frenando)
 		{
-			//RestaurarVel();
-			Frenar();
-		}
-	
-		// Update is called once per frame
-		void Update () 
-		{
-	
-		}
-	
-		void FixedUpdate ()
-		{
-			if(frenando)
+			Tempo += T.GetFDT();
+			if(Tempo >= (TiempFrenado / CantMensajes) * Contador)
 			{
-				_tempo += T.GetFdt();
-				if(_tempo >= (_tiempFrenado / _cantMensajes) * _contador)
-				{
-					_contador++;
-					//gameObject.SendMessage("SetDragZ", (float) (DagMax / CantMensajes) * Contador);
-				}
-				if(_tempo >= _tiempFrenado)
-				{
-					//termino de frenar, que haga lo que quiera
-				}
+				Contador++;
+				//gameObject.SendMessage("SetDragZ", (float) (DagMax / CantMensajes) * Contador);
+			}
+			if(Tempo >= TiempFrenado)
+			{
+				//termino de frenar, que haga lo que quiera
 			}
 		}
+	}
 	
-		void OnTriggerEnter(Collider other) 
+	void OnTriggerEnter(Collider other) 
+	{
+		if(other.tag == TagDeposito)
 		{
-			if(other.tag == tagDeposito)
-			{
-				Deposito2 dep = other.GetComponent<Deposito2>();
-				if(dep.vacio)
-				{	
-					if(this.GetComponent<Player>().ConBolasas())
-					{
-						dep.Entrar(this.GetComponent<Player>());
-						_destino = other.transform.position;
-						transform.forward = _destino - transform.position;
-						Frenar();
-					}				
-				}
+			Deposito2 dep = other.GetComponent<Deposito2>();
+			if(dep.Vacio)
+			{	
+				if(this.GetComponent<Player>().ConBolasas())
+				{
+					dep.Entrar(this.GetComponent<Player>());
+					Destino = other.transform.position;
+					transform.forward = Destino - transform.position;
+					Frenar();
+				}				
 			}
 		}
+	}
 	
-		//-----------------------------------------------------------//
+	//-----------------------------------------------------------//
 	
-		public void Frenar()
-		{
-			//Debug.Log(gameObject.name + "frena");
-			GetComponent<ControlDireccion>().enabled = false;
-			gameObject.GetComponent<CarController>().SetAcel(0);
+	public void Frenar()
+	{
+		//Debug.Log(gameObject.name + "frena");
+		GetComponent<ControlDireccion>().enabled = false;
+		gameObject.GetComponent<CarController>().SetAcel(0);
 
-			GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 		
-			frenando = true;
+		Frenando = true;
 		
-			//gameObject.SendMessage("SetDragZ", 25f);
-			_tempo = 0;
-			_contador = 0;
-		}
+		//gameObject.SendMessage("SetDragZ", 25f);
+		Tempo = 0;
+		Contador = 0;
+	}
 	
-		public void RestaurarVel()
-		{
-			//Debug.Log(gameObject.name + "restaura la velociad");
-			GetComponent<ControlDireccion>().enabled = true;
-			gameObject.GetComponent<CarController>().SetAcel(1);
-			frenando = false;
-			_tempo = 0;
-			_contador = 0;
-			//gameObject.SendMessage("SetDragZ", 1f);
-		}
+	public void RestaurarVel()
+	{
+		//Debug.Log(gameObject.name + "restaura la velociad");
+		GetComponent<ControlDireccion>().enabled = true;
+        gameObject.GetComponent<CarController>().SetAcel(1);
+        Frenando = false;
+		Tempo = 0;
+		Contador = 0;
+		//gameObject.SendMessage("SetDragZ", 1f);
 	}
 }

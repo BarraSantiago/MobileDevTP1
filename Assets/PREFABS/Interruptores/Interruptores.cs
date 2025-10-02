@@ -1,39 +1,37 @@
 using UnityEngine;
+using System.Collections;
 
-namespace Prefabs.Interruptores
+public class Interruptores : MonoBehaviour 
 {
-	public class Interruptores : MonoBehaviour 
-	{
-		public string tagPlayer = "Player";
+	public string TagPlayer = "Player";
 	
-		public GameObject[] aActivar;
+	public GameObject[] AActivar;
 	
-		public bool activado = false;
+	public bool Activado = false;
 
-		// Use this for initialization
-		void Start () 
+	// Use this for initialization
+	void Start () 
+	{
+	
+	}
+	
+	// Update is called once per frame
+	void Update () 
+	{
+	
+	}
+	
+	void OnTriggerEnter(Collider other) 
+	{
+		if(!Activado)
 		{
-	
-		}
-	
-		// Update is called once per frame
-		void Update () 
-		{
-	
-		}
-	
-		void OnTriggerEnter(Collider other) 
-		{
-			if(!activado)
+			if(other.tag == TagPlayer)
 			{
-				if(other.tag == tagPlayer)
+				Activado = true;
+				print("activado interrutor");
+				for(int i = 0; i < AActivar.Length; i++)
 				{
-					activado = true;
-					print("activado interrutor");
-					for(int i = 0; i < aActivar.Length; i++)
-					{
-						aActivar[i].SetActiveRecursively(true);
-					}
+					AActivar[i].SetActiveRecursively(true);
 				}
 			}
 		}

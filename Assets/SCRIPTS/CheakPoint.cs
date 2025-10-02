@@ -1,53 +1,62 @@
 using UnityEngine;
+using System.Collections;
 
 public class CheakPoint : MonoBehaviour
 {
-    public string playerTag = "Player";
-    public float tiempPermanencia = 0.7f; //tiempo que no deja respaunear a un pj desp que el otro lo hizo.
-    private bool _habilitadoResp = true;
-    private float _tempo;
+	public string PlayerTag = "Player";
+	bool HabilitadoResp = true;
+	public float TiempPermanencia = 0.7f;//tiempo que no deja respaunear a un pj desp que el otro lo hizo.
+	float Tempo = 0;
 
-    // Use this for initialization
-    private void Start()
-    {
-        GetComponent<Renderer>().enabled = false;
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        if (!_habilitadoResp)
-        {
-            _tempo += T.GetDT();
-            if (_tempo >= tiempPermanencia)
-            {
-                _tempo = 0;
-                _habilitadoResp = true;
-            }
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == playerTag) other.GetComponent<Respawn>().AgregarCp(this);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == playerTag) _habilitadoResp = true;
-    }
-
-    //---------------------------------------------------//
-
-    public bool Habilitado()
-    {
-        if (_habilitadoResp)
-        {
-            _habilitadoResp = false;
-            _tempo = 0;
-            return true;
-        }
-
-        return _habilitadoResp;
-    }
+	// Use this for initialization
+	void Start ()
+	{
+		GetComponent<Renderer>().enabled = false;
+	}
+	
+	// Update is called once per frame
+	void Update () 
+	{
+		if(!HabilitadoResp)
+		{
+			Tempo += T.GetDT();
+			if(Tempo >= TiempPermanencia)
+			{
+				Tempo = 0;
+				HabilitadoResp = true;
+			}
+		}
+	}
+	
+	void OnTriggerEnter(Collider other)
+	{
+		if(other.tag == PlayerTag)
+		{
+			other.GetComponent<Respawn>().AgregarCP(this);
+		}	
+	}
+	
+	void OnTriggerExit(Collider other)
+	{
+		if(other.tag == PlayerTag)
+		{
+			HabilitadoResp = true;
+		}
+	}
+	
+	//---------------------------------------------------//
+	
+	public bool Habilitado()
+	{
+		if(HabilitadoResp)
+		{
+			HabilitadoResp = false;
+			Tempo = 0;
+			return true;
+		}
+		else
+		{
+			return HabilitadoResp;
+		}
+	}
 }

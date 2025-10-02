@@ -1,98 +1,102 @@
 using UnityEngine;
+using System.Collections;
 
-namespace EscenaDescarga
-{
-    public class Estanteria : ManejoPallets
-    {
-        public Cinta cintaReceptora; //cinta que debe recibir la bolsa
-        public Pallet.Valores valor;
-        public bool anim;
-
-
-        //animacion de parpadeo
-        public float intervalo = 0.7f;
-        public float permanencia = 0.2f;
-        public GameObject modelSuelo;
-        public Color32 colorParpadeo;
-        private float _animTempo;
-        private Color32 _colorOrigModel;
-        private PilaPalletMng _contenido;
-
-        //--------------------------------//	
-
-        private void Start()
-        {
-            _contenido = GetComponent<PilaPalletMng>();
-            _colorOrigModel = modelSuelo.GetComponent<Renderer>().material.color;
-        }
-
-        private void Update()
-        {
-            //animacion de parpadeo
-            if (anim)
-            {
-                _animTempo += T.GetDT();
-                if (_animTempo > permanencia)
-                    if (modelSuelo.GetComponent<Renderer>().material.color == colorParpadeo)
-                    {
-                        _animTempo = 0;
-                        modelSuelo.GetComponent<Renderer>().material.color = _colorOrigModel;
-                    }
-
-                if (_animTempo > intervalo)
-                    if (modelSuelo.GetComponent<Renderer>().material.color == _colorOrigModel)
-                    {
-                        _animTempo = 0;
-                        modelSuelo.GetComponent<Renderer>().material.color = colorParpadeo;
-                    }
+public class Estanteria : ManejoPallets
+{	
+	public Cinta CintaReceptora;//cinta que debe recibir la bolsa
+	public Pallet.Valores Valor;
+	PilaPalletMng Contenido;
+	public bool Anim = false;
+	
+	
+	//animacion de parpadeo
+	public float Intervalo = 0.7f;
+	public float Permanencia = 0.2f;
+	float AnimTempo = 0;
+	public GameObject ModelSuelo;
+	public Color32 ColorParpadeo;
+	Color32 ColorOrigModel;
+	
+	//--------------------------------//	
+	
+	void Start () 
+	{
+		Contenido = GetComponent<PilaPalletMng>();
+		ColorOrigModel = ModelSuelo.GetComponent<Renderer>().material.color;
+	}
+	
+	void Update () 
+	{
+		//animacion de parpadeo
+		if(Anim)
+		{
+			AnimTempo += T.GetDT();
+			if(AnimTempo > Permanencia)
+			{
+				if(ModelSuelo.GetComponent<Renderer>().material.color == ColorParpadeo)
+				{
+					AnimTempo = 0;
+					ModelSuelo.GetComponent<Renderer>().material.color = ColorOrigModel;
+				}
+			}
+			if(AnimTempo > Intervalo)
+			{
+				if(ModelSuelo.GetComponent<Renderer>().material.color == ColorOrigModel)
+				{
+					AnimTempo = 0;
+					ModelSuelo.GetComponent<Renderer>().material.color = ColorParpadeo;
+				}
+			}
+		}
+	}
+	
+	void OnTriggerEnter(Collider other)
+	{
+		ManejoPallets recept = other.GetComponent<ManejoPallets>();
+		if(recept != null)
+		{
+			Dar(recept);
+		}
+	}
+	
+	//------------------------------------------------------------//
+	
+	public override void Dar(ManejoPallets receptor)
+	{
+        if (Tenencia()) {
+            if (Controlador.GetPalletEnMov() == null) {
+                if (receptor.Recibir(Pallets[0])) {
+                    //enciende la cinta y el indicador
+                    //cambia la textura de cuantos pallet le queda
+                    CintaReceptora.Encender();
+                    Controlador.SalidaPallet(Pallets[0]);
+                    Pallets[0].GetComponent<Renderer>().enabled = true;
+                    Pallets.RemoveAt(0);
+                    Contenido.Sacar();
+                    ApagarAnim();
+                    //Debug.Log("pallet entregado a Mano de Estanteria");
+                }
             }
         }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            ManejoPallets recept = other.GetComponent<ManejoPallets>();
-            if (recept != null) Dar(recept);
-        }
-
-        //------------------------------------------------------------//
-
-        public override void Dar(ManejoPallets receptor)
-        {
-            if (Tenencia())
-                if (controlador.GetPalletEnMov() == null)
-                    if (receptor.Recibir(_pallets[0]))
-                    {
-                        //enciende la cinta y el indicador
-                        //cambia la textura de cuantos pallet le queda
-                        cintaReceptora.Encender();
-                        controlador.SalidaPallet(_pallets[0]);
-                        _pallets[0].GetComponent<Renderer>().enabled = true;
-                        _pallets.RemoveAt(0);
-                        _contenido.Sacar();
-                        ApagarAnim();
-                        //Debug.Log("pallet entregado a Mano de Estanteria");
-                    }
-        }
-
-        public override bool Recibir(Pallet pallet)
-        {
-            pallet.cintaReceptora = cintaReceptora.gameObject;
-            pallet.portador = gameObject;
-            _contenido.Agregar();
-            pallet.GetComponent<Renderer>().enabled = false;
-            return base.Recibir(pallet);
-        }
-
-        public void ApagarAnim()
-        {
-            anim = false;
-            modelSuelo.GetComponent<Renderer>().material.color = _colorOrigModel;
-        }
-
-        public void EncenderAnim()
-        {
-            anim = true;
-            modelSuelo.GetComponent<Renderer>().material.color = _colorOrigModel;
-        }
     }
+	
+	public override bool Recibir (Pallet pallet)
+	{
+		pallet.CintaReceptora = CintaReceptora.gameObject;
+		pallet.Portador = this.gameObject;
+		Contenido.Agregar();
+		pallet.GetComponent<Renderer>().enabled = false;
+		return base.Recibir (pallet);
+	}
+	
+	public void ApagarAnim()
+	{
+		Anim = false;
+		ModelSuelo.GetComponent<Renderer>().material.color = ColorOrigModel;
+	}
+	public void EncenderAnim()
+	{
+		Anim = true;
+		ModelSuelo.GetComponent<Renderer>().material.color = ColorOrigModel;
+	}
 }

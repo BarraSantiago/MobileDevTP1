@@ -1,34 +1,36 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
-namespace EscenaDescarga
+public class PilaPalletMng : MonoBehaviour 
 {
-    public class PilaPalletMng : MonoBehaviour
-    {
-        public List<GameObject> bolasasEnCamion = new();
-        public int cantAct;
-
-        // Use this for initialization
-        private void Start()
-        {
-            for (int i = 0; i < bolasasEnCamion.Count; i++) bolasasEnCamion[i].GetComponent<Renderer>().enabled = false;
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
-        }
-
-        public void Sacar()
-        {
-            bolasasEnCamion[cantAct - 1].GetComponent<Renderer>().enabled = false;
-            cantAct--;
-        }
-
-        public void Agregar()
-        {
-            cantAct++;
-            bolasasEnCamion[cantAct - 1].GetComponent<Renderer>().enabled = true;
-        }
-    }
+	public System.Collections.Generic.List<GameObject> BolasasEnCamion = new System.Collections.Generic.List<GameObject>();
+	public int CantAct = 0;
+	
+	// Use this for initialization
+	void Start () 
+	{
+		for(int i = 0; i < BolasasEnCamion.Count; i++)
+		{
+			BolasasEnCamion[i].GetComponent<Renderer>().enabled = false;
+		}
+	}
+	
+	// Update is called once per frame
+	void Update () 
+	{
+	
+	}
+	
+	public void Sacar()
+	{
+		BolasasEnCamion[CantAct-1].GetComponent<Renderer>().enabled = false;
+		CantAct--;
+	}
+	
+	public void Agregar()
+	{
+		CantAct++;
+		BolasasEnCamion[CantAct-1].GetComponent<Renderer>().enabled = true;
+		
+	}
 }

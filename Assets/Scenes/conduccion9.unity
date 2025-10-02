@@ -109906,59 +109906,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8ccfbee54199948923d8705f53aea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TiempoDeJuego: 60
-  EstAct: 0
-  PlayerInfo1:
-    FinCalibrado: 0
-    FinTuto1: 0
-    FinTuto2: 0
-    LadoAct: 0
-    TipoDeInput: 0
-    PJ: {fileID: 0}
-  PlayerInfo2:
-    FinCalibrado: 0
-    FinTuto1: 0
-    FinTuto2: 0
-    LadoAct: 0
-    TipoDeInput: 0
-    PJ: {fileID: 0}
-  Player1: {fileID: 13058}
-  Player2: {fileID: 27660010}
+  TiempoJuego: 60
+  gameMode: 1
+  TiempoCuentaRegresiva: 3
+  PosEnPantallaCuentaRegresiva:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  GUISkinConteo: {fileID: 11400000, guid: 4617cfc0891d30244bdf0d4b4a9f563e, type: 2}
+  RectGUITiempo:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  GUISkinTiempo: {fileID: 11400000, guid: ee22b958b62f3aa4ba6a6919f7f4eacf, type: 2}
+  Jugador1: {fileID: 13058}
+  Jugador2: {fileID: 27660010}
   Esqueleto1: {fileID: 3493}
   Esqueleto2: {fileID: 3492}
-  PosEsqsCarrera:
+  PosicionesEsqueletoCarrera:
   - {x: 163, y: -0.7, z: 0.4}
   - {x: -8, y: -0.7, z: 0.4}
-  ConteoPosEsc:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  ConteoParaInicion: 3
-  GS_ConteoInicio: {fileID: 11400000, guid: 4617cfc0891d30244bdf0d4b4a9f563e, type: 2}
-  TiempoGUI:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  GS_TiempoGUI: {fileID: 11400000, guid: ee22b958b62f3aa4ba6a6919f7f4eacf, type: 2}
-  TiempEspMuestraPts: 1
-  PosCamionesCarrera:
+  PosicionesVehiculoCarrera:
   - {x: -17.5, y: 1, z: 5243}
   - {x: -4.2, y: 1, z: 5243}
-  PosCamion1Tuto: {x: 11.5, y: 6004.3, z: 5014.5}
-  PosCamion2Tuto: {x: -257.3, y: 6004.3, z: 5014.5}
-  ObjsCalibracion1:
+  PosicionVehiculo1Tutorial: {x: 11.5, y: 6004.3, z: 5014.5}
+  PosicionVehiculo2Tutorial: {x: -257.3, y: 6004.3, z: 5014.5}
+  ObjetosCalibracion1:
   - {fileID: 3073}
-  ObjsCalibracion2:
+  ObjetosCalibracion2:
   - {fileID: 3092}
-  ObjsTuto1:
+  ObjetosTutorial1:
   - {fileID: 3095}
-  ObjsTuto2:
+  ObjetosTutorial2:
   - {fileID: 3076}
-  ObjsCarrera:
+  ObjetosCarrera:
   - {fileID: 3124}
   - {fileID: 3102}
   - {fileID: 213}
@@ -124940,6 +124925,21 @@ PrefabInstance:
       propertyPath: IdPlayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrDesc
+      value: 
+      objectReference: {fileID: 13068}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrTuto
+      value: 
+      objectReference: {fileID: 13046}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrCalib
+      value: 
+      objectReference: {fileID: 13048}
     - target: {fileID: 114911345111112572, guid: b81b1a58a0f14c9439cbdd014e695f71,
         type: 3}
       propertyPath: CamDescarga
@@ -125135,6 +125135,21 @@ PrefabInstance:
       propertyPath: ManoIzq
       value: 
       objectReference: {fileID: 4626}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrDesc
+      value: 
+      objectReference: {fileID: 13064}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrTuto
+      value: 
+      objectReference: {fileID: 13047}
+    - target: {fileID: 114643806136207610, guid: b81b1a58a0f14c9439cbdd014e695f71,
+        type: 3}
+      propertyPath: ContrCalib
+      value: 
+      objectReference: {fileID: 13045}
     - target: {fileID: 114911345111112572, guid: b81b1a58a0f14c9439cbdd014e695f71,
         type: 3}
       propertyPath: CamDescarga
