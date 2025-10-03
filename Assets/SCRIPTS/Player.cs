@@ -7,21 +7,16 @@ public class Player : MonoBehaviour
 	
 	public Bolsa[] Bolasas;
 	int CantBolsAct = 0;
-	public string TagBolsas = "";
-	
+
 	public enum Estados{EnDescarga, EnConduccion, EnTutorial, Ninguno}
 	public Estados EstAct = Estados.EnConduccion;
-	
-	public bool EnConduccion = true;
-	public bool EnDescarga = false;
-	
+
 	public ControladorDeDescarga ContrDesc;
 	public ContrCalibracion ContrCalib;
 	
 	Visualizacion MiVisualizacion;
 
 	public bool Seleccionado = false;
-	public bool FinCalibrado = false;
 	public bool FinTuto = false;
 
 	public Visualizacion.Lado LadoActual => MiVisualizacion.LadoAct;
@@ -102,7 +97,7 @@ public class Player : MonoBehaviour
 	{
 		for(int i = 0; i < Bolasas.Length; i++)
 		{
-			if(Bolasas[i] != null)
+			if(Bolasas[i])
 			{
 				Bolasas[i] = null;
 				return;
