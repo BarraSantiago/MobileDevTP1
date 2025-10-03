@@ -6,10 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/conduccion9.unity
-    guid: 6a990c81459e9b04c87adbbd2d639bbd
+    path: Assets/Scenes/Menu.unity
+    guid: 9766e0e3659822d4c8bb92d9798b8a86
   - enabled: 1
-    path: Assets/Scenes/PtsFinal.unity
-    guid: 3fed48a553168ae458bbf014c512a5cd
+    path: Assets/Scenes/Multiplayer.unity
+    guid: d6c539beb444890418922ae415c07261
+  - enabled: 1
+    path: Assets/Scenes/MultiplayerEnd.unity
+    guid: 5059e3272ec69d84b934cfdae64a335d
+  - enabled: 1
+    path: Assets/Scenes/Singleplayer.unity
+    guid: f17da895c6fa57f42a5302811531473a
+  - enabled: 1
+    path: Assets/Scenes/SingleplayerEnd.unity
+    guid: 0315fed6dbfcb7d4ba4586745685f2f3
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

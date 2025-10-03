@@ -172,6 +172,7 @@ public class MngPts : MonoBehaviour
 	
 	void SetGanador()
 	{
+		/*
 		switch(DatosPartida.LadoGanadaor)
 		{
 		case DatosPartida.Lados.Der:
@@ -185,7 +186,7 @@ public class MngPts : MonoBehaviour
 			GS_Ganador.box.normal.background = Ganadores[0];
 			
 			break;
-		}
+		}*/
 	}
 	
 	void SetDinero()
@@ -200,7 +201,7 @@ public class MngPts : MonoBehaviour
 		//IZQUIERDA
 		R.x = DineroPos[0].x * Screen.width/100;
 		R.y = DineroPos[0].y * Screen.height/100;
-		
+		/*
 		if(DatosPartida.LadoGanadaor == DatosPartida.Lados.Izq)//izquierda
 		{
 			if(!PrimerImaParp)//para que parpadee
@@ -225,7 +226,7 @@ public class MngPts : MonoBehaviour
 		else
 		{
 			GUI.Box(R, "$" + Viz.PrepararNumeros(DatosPartida.PtsPerdedor));
-		}
+		}*/
 		
 	}
 	

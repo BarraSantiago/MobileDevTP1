@@ -29,7 +29,6 @@ public class TaxiComp : MonoBehaviour
 	float TempoEntreGiro = 0;
 	
 	public float AngDeGiro = 30;
-	float TiempPGiro = 1;//1 es el tiempo que tarda en llegar al otro quaternion
 	
 	RaycastHit RH;
 	
@@ -187,8 +186,8 @@ public class TaxiComp : MonoBehaviour
 	
 	bool Medicion()
 	{
-		float dist1 = (GameManager.Instancia.Jugador1.transform.position - PosIni).magnitude;
-		float dist2 = (GameManager.Instancia.Jugador2.transform.position - PosIni).magnitude;
+		float dist1 = (GameManager.Instancia.Player1.transform.position - PosIni).magnitude;
+		float dist2 = (GameManager.Instancia.Player2.transform.position - PosIni).magnitude;
 		
 		if(dist1 > 4 && dist2 > 4)
 			return true;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Deposito2 : MonoBehaviour 
 {
@@ -9,15 +8,16 @@ public class Deposito2 : MonoBehaviour
 	public bool Vacio = true;
 	public ControladorDeDescarga Contr1;
 	public ControladorDeDescarga Contr2;
-	
 	Collider[] PjColl;
+	[SerializeField] private MultiplayerScriptableObject multiplayer;
 	
 	//----------------------------------------------//
 
 	void Start () 
 	{
 		Contr1 = GameObject.Find("ContrDesc1").GetComponent<ControladorDeDescarga>();
-		Contr2 = GameObject.Find("ContrDesc2").GetComponent<ControladorDeDescarga>();
+		if(multiplayer.isMultiplayer)
+			Contr2 = GameObject.Find("ContrDesc2").GetComponent<ControladorDeDescarga>();
 		
 		Physics.IgnoreLayerCollision(8,9,false);
 	}
@@ -48,8 +48,6 @@ public class Deposito2 : MonoBehaviour
 		
 		PjActual = null;
 		Vacio = true;
-		
-	
 	}
 	
 	public void Entrar(Player pj)
