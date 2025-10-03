@@ -1,0 +1,25 @@
+Patrones de Diseño en el Proyecto
+
+1. Singleton
+
+Dónde: AudioManager.cs y GameManager.cs
+
+Cómo funciona: Se usa una variable estática (Instance o Instancia) y en Awake() se asegura que solo haya un objeto de ese tipo en toda la partida. Si aparece otro, se destruye. Además, con DontDestroyOnLoad se mantiene entre escenas.
+
+Qué problema resuelve: Evita que se creen múltiples managers y permite tener un punto único de acceso al audio o al estado general del juego.
+
+2. Observer (Eventos)
+
+Dónde: GameManager.cs y MenuManager.cs
+
+Cómo funciona: GameManager tiene un evento (OnEndgame) que se dispara cuando termina la partida. MenuManager se suscribe a ese evento y cambia de escena automáticamente cuando sucede.
+
+Qué problema resuelve: Permite que el final del juego notifique a otras partes sin que estén conectadas directamente. Así el código queda más ordenado y menos dependiente.
+
+3. Strategy (usando ScriptableObjects)
+
+Dónde: DifficultyScriptableObject.cs (y se usa en GameManager y MenuManager).
+
+Cómo funciona: La dificultad se guarda en un ScriptableObject que puede configurarse en el editor (EASY, NORMAL, HARD). Dependiendo de esa elección, el juego activa más o menos obstáculos.
+
+Qué problema resuelve: Hace más fácil cambiar configuraciones (como dificultad o multiplayer) sin tener que tocar el código, solo desde Unity.

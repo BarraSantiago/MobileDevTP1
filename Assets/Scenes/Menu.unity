@@ -1380,7 +1380,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1128123567}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
@@ -6008,7 +6008,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 4839d72ca955b5b43ace40aae559007f, type: 3}
+  m_Resource: {fileID: 8300000, guid: b469654c7b4a3054fa49d146d5fca9d8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.1
   m_Pitch: 1
