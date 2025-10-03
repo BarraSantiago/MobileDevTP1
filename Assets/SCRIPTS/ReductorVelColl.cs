@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class ReductorVelColl : MonoBehaviour 
 {
@@ -14,7 +13,6 @@ public class ReductorVelColl : MonoBehaviour
 			if(!Usado)
 			{
 				Chocado();
-				//other.transform.GetComponent<AcelerAuto>().Chocar(this);
 			}
 		}
 	}

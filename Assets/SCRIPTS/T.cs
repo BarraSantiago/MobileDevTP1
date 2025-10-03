@@ -1,12 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public static class T 
 {
 	static float FDT;
 	static float DT;
-	
-	
 	
 	public static float GetDT()
 	{
@@ -24,8 +21,6 @@ public static class T
 		return FDT;
 	}	
 	
-	//----------
-	//fixed delta time
 	public static float FactorFDT = 1;
 	static bool FifadoFDT = false;
 	public static void FijarFDT(float valor)
@@ -40,8 +35,6 @@ public static class T
 		FactorFDT = 1;
 	}
 	
-	//----------
-	//delta time
 	public static float FactorDT = 1;
 	static bool FifadoDT = false;
 	public static void FijarDT(float valor)

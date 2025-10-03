@@ -1,151 +1,85 @@
 using UnityEngine;
-using System.Collections;
 
-public class ControlDireccion : MonoBehaviour 
+public class ControlDireccion : MonoBehaviour
 {
-	public enum TipoInput {Mouse, Kinect, AWSD, Arrows}
-	public TipoInput InputAct = ControlDireccion.TipoInput.Mouse;
+    public enum TipoInput { AWSD, Arrows }
+    public TipoInput InputAct = TipoInput.AWSD;
 
-	public Transform ManoDer;
-	public Transform ManoIzq;
-	
-	public float MaxAng = 90;
-	public float DesSencibilidad = 90;
-	
-	float Giro = 0;
-	
-	public enum Sentido {Der, Izq}
-	Sentido DirAct;
-	
-	public bool Habilitado = true;
-	//float Diferencia;
-		
-	//---------------------------------------------------------//
-	
-	// Use this for initialization
-	void Start () 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		switch(InputAct)
+    [SerializeField] private Joystick j1;
+    [SerializeField] private Joystick j2;
+
+    float Giro = 0;
+
+    public bool Habilitado = true;
+    CarController carController;
+
+    //---------------------------------------------------------//
+
+    // Use this for initialization
+    void Start()
+    {
+        carController = GetComponent<CarController>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+#if !UNITY_ANDROID
+		switch (InputAct)
 		{
-		case TipoInput.Mouse:
-			if(Habilitado) 
-				gameObject.GetComponent<CarController>().SetGiro(MousePos.Relation(MousePos.AxisRelation.Horizontal));
+			case TipoInput.AWSD:
+				if (Habilitado)
+				{
+					if (Input.GetKey(KeyCode.A))
+					{
+						Giro = -1;
+					}
+					else if (Input.GetKey(KeyCode.D))
+					{
+						Giro = 1;
+					}
+					else
+					{
+						Giro = 0;
+					}
+				}
+				break;
+			case TipoInput.Arrows:
+				if (Habilitado)
+				{
+					if (Input.GetKey(KeyCode.LeftArrow))
+					{
+						Giro = -1;
+					}
+					else if (Input.GetKey(KeyCode.RightArrow))
+					{
+						Giro = 1;
+					}
+					else
+					{
+						Giro = 0;
+					}
+				}
+				break;
+		}
+#endif
 
-            break;
-			
-		case TipoInput.Kinect:
-			
-			//print("Angulo: "+Angulo());
-			/*
-			if(ManoIzq.position.y > ManoDer.position.y)
-			{
-				DirAct = Sentido.Der;
-				Diferencia = ManoIzq.position.y - ManoDer.position.y;
-			}
-			else
-			{
-				DirAct = Sentido.Izq;
-				Diferencia = ManoDer.position.y - ManoIzq.position.y;
-			}
-			*/
-			
-			if(ManoIzq.position.y > ManoDer.position.y)
-			{
-				DirAct = Sentido.Der;
-			}
-			else
-			{
-				DirAct = Sentido.Izq;
-			}
-			
-			switch(DirAct)
-			{
-			case Sentido.Der:
-				if(Angulo() <= MaxAng)
-					Giro = Angulo() / (MaxAng + DesSencibilidad);
-				else
-					Giro = 1;
-				
-				if(Habilitado)
-					gameObject.GetComponent<CarController>().SetGiro(Giro);
-				
-				break;
-				
-			case Sentido.Izq:
-				if(Angulo() <= MaxAng)
-					Giro = (Angulo() / (MaxAng + DesSencibilidad)) * (-1);
-				else
-					Giro = (-1);
-				
-				if(Habilitado)
-					gameObject.GetComponent<CarController>().SetGiro(Giro);
-				
-				break;
-			}
-			break;
+#if UNITY_ANDROID
+        switch (InputAct)
+        {
             case TipoInput.AWSD:
-                if (Habilitado) {
-                    if (Input.GetKey(KeyCode.A))
-                    {
-                        gameObject.GetComponent<CarController>().SetGiro(-1);
-                    }
-                    if (Input.GetKey(KeyCode.D))
-                    {
-                        gameObject.GetComponent<CarController>().SetGiro(1);
-                    }
-                }
+                Giro = j1.Horizontal;
                 break;
             case TipoInput.Arrows:
-                if (Habilitado) {
-                    if (Input.GetKey(KeyCode.LeftArrow))
-                    {
-                        gameObject.GetComponent<CarController>().SetGiro(-1);
-                    }
-                    if (Input.GetKey(KeyCode.RightArrow))
-                    {
-                        gameObject.GetComponent<CarController>().SetGiro(1);
-                    }
-                }
+                Giro = j2.Horizontal;
                 break;
-        }		
-	}
+        }
+#endif
+        carController.SetGiro(Giro);
+    }
 
-	public float GetGiro()
-	{
-		/*
-		switch(DirAct)
-			{
-			case Sentido.Der:
-				if(Angulo() <= MaxAng)
-					return Angulo() / MaxAng;
-				else
-					return 1;
-				break;
-				
-			case Sentido.Izq:
-				if(Angulo() <= MaxAng)
-					return (Angulo() / MaxAng) * (-1);
-				else
-					return (-1);
-				break;
-			}
-		*/
-		
-		return Giro;
-	}
-	
-	float Angulo()
-	{
-		Vector2 diferencia = new Vector2(ManoDer.localPosition.x, ManoDer.localPosition.y)
-						   - new Vector2(ManoIzq.localPosition.x, ManoIzq.localPosition.y);
-		
-		return Vector2.Angle(diferencia,new Vector2(1,0));
-	}
-	
+    public float GetGiro()
+    {
+        return Giro;
+    }
 }

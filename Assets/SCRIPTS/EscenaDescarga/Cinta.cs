@@ -1,14 +1,11 @@
 using UnityEngine;
-using System.Collections;
 
 public class Cinta : ManejoPallets 
 {
 	public bool Encendida;//lo que hace la animacion
-	bool ConPallet = false;
 	public float Velocidad = 1;
 	public GameObject Mano;
 	public float Tiempo = 0.5f;
-	float Tempo = 0;
 	Transform ObjAct = null;
 	
 	//animacion de parpadeo
@@ -68,7 +65,7 @@ public class Cinta : ManejoPallets
 					if(Pallets[i].TempoEnCinta >= Pallets[i].TiempEnCinta)
 					{
 						Pallets[i].TempoEnCinta = 0;
-						ObjAct.gameObject.SetActiveRecursively(false);
+						ObjAct.gameObject.SetActive(false);
 					}
 				}
 			}
@@ -89,13 +86,10 @@ public class Cinta : ManejoPallets
 
 	public override bool Recibir(Pallet p)
 	{
-        Tempo = 0;
         Controlador.LlegadaPallet(p);
         p.Portador = this.gameObject;
-        ConPallet = true;
         ObjAct = p.transform;
         base.Recibir(p);
-        //p.GetComponent<Pallet>().enabled = false;
         Apagar();
 
         return true;
@@ -109,7 +103,6 @@ public class Cinta : ManejoPallets
 	public void Apagar()
 	{
 		Encendida = false;
-		ConPallet = false;
 		ModelCinta.GetComponent<Renderer>().material.color = ColorOrigModel;
 	}
 }

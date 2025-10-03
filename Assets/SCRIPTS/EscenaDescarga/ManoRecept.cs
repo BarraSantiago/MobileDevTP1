@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class ManoRecept : ManejoPallets 
 {
@@ -36,20 +35,16 @@ public class ManoRecept : ManejoPallets
 	
 	public override void Dar(ManejoPallets receptor)
 	{
-		//Debug.Log(gameObject.name+ " / Dar()");
 		switch (receptor.tag)
 		{
 		case "Mano":
 			if(Tenencia())
 			{
-				//Debug.Log(gameObject.name+ " / Dar()"+" / Tenencia=true");
 				if(receptor.name == "Right Hand")
 				{
 					if(receptor.Recibir(Pallets[0]))
 					{
-						//Debug.Log(gameObject.name+ " / Dar()"+" / Tenencia=true"+" / receptor.Recibir(Pallets[0])=true");
 						Pallets.RemoveAt(0);
-						//Debug.Log("pallet entregado a Mano de Mano");
 					}
 				}
 				
@@ -62,7 +57,6 @@ public class ManoRecept : ManejoPallets
 				if(receptor.Recibir(Pallets[0]))
 				{
 					Pallets.RemoveAt(0);
-					//Debug.Log("pallet entregado a Cinta de Mano");
 				}
 			}
 			break;

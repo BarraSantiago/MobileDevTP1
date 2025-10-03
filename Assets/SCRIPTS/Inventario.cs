@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Inventario : MonoBehaviour 
 {
@@ -20,19 +19,10 @@ public class Inventario : MonoBehaviour
 	
 	Rect R;
 	public GUISkin GS;
-	
-	//------------------------------------------------------------------//
-	
-	// Use this for initialization
+
 	void Start () 
 	{
 		Pj = GetComponent<Player>();
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
 	}
 	
 	void OnGUI()
@@ -82,9 +72,5 @@ public class Inventario : MonoBehaviour
 			GUI.skin = null;
 				break;
 		}
-		
-		
 	}
-	
-	//------------------------------------------------------------------//
 }

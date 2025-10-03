@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Player : MonoBehaviour 
 {
@@ -10,7 +9,7 @@ public class Player : MonoBehaviour
 	int CantBolsAct = 0;
 	public string TagBolsas = "";
 	
-	public enum Estados{EnDescarga, EnConduccion, EnCalibracion, EnTutorial}
+	public enum Estados{EnDescarga, EnConduccion, EnTutorial, Ninguno}
 	public Estados EstAct = Estados.EnConduccion;
 	
 	public bool EnConduccion = true;
@@ -18,13 +17,15 @@ public class Player : MonoBehaviour
 	
 	public ControladorDeDescarga ContrDesc;
 	public ContrCalibracion ContrCalib;
-	public ContrTutorial ContrTuto;
 	
 	Visualizacion MiVisualizacion;
-	
-	//------------------------------------------------------------------//
 
-	// Use this for initialization
+	public bool Seleccionado = false;
+	public bool FinCalibrado = false;
+	public bool FinTuto = false;
+
+	public Visualizacion.Lado LadoActual => MiVisualizacion.LadoAct;
+
 	void Start () 
 	{
 		for(int i = 0; i< Bolasas.Length;i++)
@@ -32,14 +33,6 @@ public class Player : MonoBehaviour
 		
 		MiVisualizacion = GetComponent<Visualizacion>();
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
-	}
-	
-	//------------------------------------------------------------------//
 	
 	public bool AgregarBolsa(Bolsa b)
 	{
@@ -87,29 +80,22 @@ public class Player : MonoBehaviour
 		return ContrDesc;
 	}
 	
-	public void CambiarACalibracion()
-	{
-		MiVisualizacion.CambiarACalibracion();
-		EstAct = Player.Estados.EnCalibracion;
-	}
-	
 	public void CambiarATutorial()
 	{
-		MiVisualizacion.CambiarATutorial();
 		EstAct = Player.Estados.EnTutorial;
-		ContrTuto.Iniciar();
+		MiVisualizacion.CambiarATutorial();
 	}
 	
 	public void CambiarAConduccion()
 	{
-		MiVisualizacion.CambiarAConduccion();
 		EstAct = Player.Estados.EnConduccion;
+		MiVisualizacion.CambiarAConduccion();
 	}
 	
 	public void CambiarADescarga()
 	{
-		MiVisualizacion.CambiarADescarga();
 		EstAct = Player.Estados.EnDescarga;
+		MiVisualizacion.CambiarADescarga();
 	}
 	
 	public void SacarBolasa()
@@ -123,26 +109,4 @@ public class Player : MonoBehaviour
 			}				
 		}
 	}
-	
-	
-	public ContrCalibracion CalibrationController 
-	{ 
-	    get { return ContrCalib; } 
-	}
-	
-	public void SwitchToCalibration()
-	{
-	    CambiarACalibracion();
-	}
-	
-	public void SwitchToDriving()
-	{
-	    CambiarAConduccion();
-	}
-	
-	public ControladorDeDescarga DownloadController 
-	{ 
-	    get { return ContrDesc; } 
-	}
-	
 }

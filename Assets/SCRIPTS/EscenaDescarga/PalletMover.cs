@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PalletMover : ManejoPallets {
 
@@ -10,10 +8,14 @@ public class PalletMover : ManejoPallets {
         Arrows
     }
 
+    [SerializeField] private Joystick j1;
+    [SerializeField] private Joystick j2;
+
     public ManejoPallets Desde, Hasta;
     bool segundoCompleto = false;
 
     private void Update() {
+    #if !UNITY_ANDROID
         switch (miInput) {
             case MoveType.WASD:
                 if (!Tenencia() && Desde.Tenencia() && Input.GetKeyDown(KeyCode.A)) {
@@ -40,6 +42,38 @@ public class PalletMover : ManejoPallets {
             default:
                 break;
         }
+#endif
+#if UNITY_ANDROID
+    switch (miInput) {
+            case MoveType.WASD:
+                if (!Tenencia() && Desde.Tenencia() && j1.Horizontal < -0.85f) {
+                    PrimerPaso();
+                }
+                if (Tenencia() && j1.Vertical < -0.85f) {
+                    SegundoPaso();
+                }
+                if (segundoCompleto && Tenencia() && j1.Horizontal > 0.85f) {
+                    TercerPaso();
+                }
+                break;
+            case MoveType.Arrows:
+                if (!Tenencia() && Desde.Tenencia() && j2.Horizontal < -0.85f)
+                {
+                    PrimerPaso();
+                }
+                if (Tenencia() && j2.Vertical < -0.85f)
+                {
+                    SegundoPaso();
+                }
+                if (segundoCompleto && Tenencia() && j2.Horizontal > 0.85f)
+                {
+                    TercerPaso();
+                }
+                break;
+            default:
+                break;
+        }
+#endif
     }
 
     void PrimerPaso() {

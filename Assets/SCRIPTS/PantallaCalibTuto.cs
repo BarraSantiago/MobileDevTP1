@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class PantallaCalibTuto : MonoBehaviour 
 {
@@ -15,12 +14,6 @@ public class PantallaCalibTuto : MonoBehaviour
 	public Texture2D ImaReady;
 	
 	public ContrCalibracion ContrCalib;
-
-	// Use this for initialization
-	void Start () 
-	{
-	
-	}
 	
 	// Update is called once per frame
 	void Update () 
@@ -62,8 +55,6 @@ public class PantallaCalibTuto : MonoBehaviour
 			GetComponent<Renderer>().material.mainTexture = ImaReady;
 			
 			break;
-		}
-			
-			
+		}		
 	}
 }

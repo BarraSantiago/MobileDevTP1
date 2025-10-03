@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class AnimMngDesc : MonoBehaviour 
 {
@@ -34,7 +33,6 @@ public class AnimMngDesc : MonoBehaviour
 			{
 				AnimAct = AnimMngDesc.AnimEnCurso.Nada;
 				ContrDesc.FinAnimEntrada();
-				print("fin Anim Entrada");
 			}
 			
 			break;
@@ -45,7 +43,6 @@ public class AnimMngDesc : MonoBehaviour
 			{
 				AnimAct = AnimMngDesc.AnimEnCurso.Nada;
 				ContrDesc.FinAnimSalida();
-				print("fin Anim Salida");
 			}
 			
 			break;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class CarCamera : MonoBehaviour
 {
@@ -26,14 +25,14 @@ public class CarCamera : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		currentVelocity = Vector3.Lerp(prevVelocity, target.root.GetComponent<Rigidbody>().linearVelocity, velocityDamping * Time.deltaTime);
+		currentVelocity = Vector3.Lerp(prevVelocity, target.GetComponentInParent<Rigidbody>().linearVelocity, velocityDamping * Time.deltaTime);
 		currentVelocity.y = 0;
 		prevVelocity = currentVelocity;
 	}
 	
 	void LateUpdate()
 	{
-		float speedFactor = Mathf.Clamp01(target.root.GetComponent<Rigidbody>().linearVelocity.magnitude / 70.0f);
+		float speedFactor = Mathf.Clamp01(target.GetComponentInParent<Rigidbody>().linearVelocity.magnitude / 70.0f);
 		GetComponent<Camera>().fieldOfView = Mathf.Lerp(55, 72, speedFactor);
 		float currentDistance = Mathf.Lerp(7.5f, 6.5f, speedFactor);
 		
