@@ -109,11 +109,11 @@ public class MenuManager : MonoBehaviour
     {
         if (multiplayer.isMultiplayer)
         {
-            SceneManager.LoadScene(5);
+            SceneManager.LoadScene(3);
         }
         else
         {
-            SceneManager.LoadScene(4);
+            SceneManager.LoadScene(5);
         }
     }
 }

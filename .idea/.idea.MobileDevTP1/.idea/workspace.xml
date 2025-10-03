@@ -4,19 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="050f94d2-56e5-4cac-9bbd-377bff59b626" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MobileDevTP1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MobileDevTP1/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" afterDir="false" />
-    </list>
+    <list default="true" id="050f94d2-56e5-4cac-9bbd-377bff59b626" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DpaMonitoringSettings">
-    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,17 +21,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Build\Camiones.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="F:\Image Campus\Image 2025\Moviles\Build" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
+      <method v="2" />
+    </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.56f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;F:\Image Campus\Image 2025\Moviles\MobileDevTP1&quot; -debugCodeOptimization" />
@@ -78,15 +81,13 @@
       <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="21168">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="21168" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="runtimes">
-        <list>
-          <MonoRuntime />
-        </list>
+        <list />
       </option>
       <option name="selectedOptions">
         <list />
@@ -106,7 +107,6 @@
       <option name="presentableId" value="Default" />
       <updated>1759082377274</updated>
       <workItem from="1759082378470" duration="8848000" />
-      <workItem from="1759447273658" duration="2079000" />
     </task>
     <servers />
   </component>
@@ -135,19 +135,6 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/MenuManager.cs</url>
-          <line>83</line>
-          <properties documentPath="F:\Image Campus\Image 2025\Moviles\MobileDevTP1\Assets\Scripts\MenuManager.cs" containingFunctionPresentation="Method 'ChangeDifficulty'">
-            <startOffsets>
-              <option value="1998" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2046" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
